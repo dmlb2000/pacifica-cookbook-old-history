@@ -83,7 +83,7 @@ module PacificaCookbook
           /bin
           /usr/sbin
           /usr/bin
-        ).join(':')
+        ).join(':'),
       }
       if service_opts.key?(:environment)
         service_env = service_env.merge(service_opts.delete(:environment))

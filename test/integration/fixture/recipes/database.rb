@@ -14,34 +14,34 @@ postgresql_connection_info = {
   host: '127.0.0.1',
   port: node['postgresql']['config']['port'],
   username: 'postgres',
-  password: 'postgres'
+  password: 'postgres',
 }
 mysql_connection_info = {
   host: '127.0.0.1',
   socket: '/var/run/mysql-default/mysqld.sock',
   username: 'root',
-  password: 'mysql'
+  password: 'mysql',
 }
 
 {
   cartd: {
     users: {
-      cart: 'cart'
+      cart: 'cart',
     },
     db_provider: Chef::Provider::Database::Mysql,
     user_provider: Chef::Provider::Database::MysqlUser,
     user_actions: [:grant],
-    connection_info: mysql_connection_info
+    connection_info: mysql_connection_info,
   },
   metadata: {
     users: {
-      metadata: 'metadata'
+      metadata: 'metadata',
     },
     db_provider: Chef::Provider::Database::Postgresql,
     user_provider: Chef::Provider::Database::PostgresqlUser,
     user_actions: [:create, :grant],
-    connection_info: postgresql_connection_info
-  }
+    connection_info: postgresql_connection_info,
+  },
 }.each do |dbname, data|
   database dbname.to_s do
     provider data[:db_provider]
