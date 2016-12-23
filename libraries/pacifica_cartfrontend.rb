@@ -15,8 +15,10 @@ module PacificaCookbook
       {
         exec_start: "#{virtualenv_dir}/bin/python #{source_dir}/cartserver.py --port 8081 --address 0.0.0.0",
         environment: {
-          VOLUME_PATH: "#{prefix_dir}/cartdata",
-          LRU_BUFFER_TIME: 0
+          VOLUME_PATH: "#{prefix_dir}/cartdata/",
+          LRU_BUFFER_TIME: 0,
+          MYSQL_ENV_MYSQL_PASSWORD: 'cart',
+          MYSQL_ENV_MYSQL_USER: 'cart'
         }
       }
     }

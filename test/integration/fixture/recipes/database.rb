@@ -25,18 +25,35 @@ mysql_connection_info = {
 
 {
   cartd: {
-    cart: 'cart'
+    users: {
+      cart: 'cart'
+    },
+    db_provider: Chef::Provider::Database::Mysql,
+    user_provider: Chef::Provider::Database::MysqlUser,
+    user_actions: [:grant],
+    connection_info: mysql_connection_info
+  },
+  metadata: {
+    users: {
+      metadata: 'metadata'
+    },
+    db_provider: Chef::Provider::Database::Postgresql,
+    user_provider: Chef::Provider::Database::PostgresqlUser,
+    user_actions: [:create, :grant],
+    connection_info: postgresql_connection_info
   }
-}.each do |dbname, users|
-  mysql_database "#{dbname}" do
-    connection mysql_connection_info
+}.each do |dbname, data|
+  database "#{dbname}" do
+    provider data[:db_provider]
+    connection data[:connection_info]
   end
-  users.each do |username, password|
-    mysql_database_user username do
-      connection mysql_connection_info
+  data[:users].each do |username, password|
+    database_user username do
+      provider data[:user_provider]
+      connection data[:connection_info]
       password password
       database_name "#{dbname}"
-      action :grant
+      action data[:user_actions]
     end
   end
 end

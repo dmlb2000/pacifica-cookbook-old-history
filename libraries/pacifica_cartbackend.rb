@@ -9,8 +9,10 @@ module PacificaCookbook
       {
         exec_start: "#{virtualenv_dir}/bin/python -m celery -A cart worker -l info",
         environment: {
-          VOLUME_PATH: "#{prefix_dir}/cartdata",
-          LRU_BUFFER_TIME: 0
+          VOLUME_PATH: "#{prefix_dir}/cartdata/",
+          LRU_BUFFER_TIME: 0,
+          MYSQL_ENV_MYSQL_PASSWORD: 'cart',
+          MYSQL_ENV_MYSQL_USER: 'cart'
         }
       }
     }
