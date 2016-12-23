@@ -1,3 +1,3 @@
 group :development do
-  gem 'chef', '12.16.42'
+  gem 'chef', '12.17.44'
 end
