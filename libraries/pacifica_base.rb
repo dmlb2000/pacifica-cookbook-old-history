@@ -1,40 +1,104 @@
 module PacificaCookbook
   class PacificaBase < ChefCompat::Resource
+    property :prefix, String, default: '/opt'
+    property :directory_opts, Hash, default: {}
+    property :virtualenv_opts, Hash, default: {}
+    property :python_opts, Hash, default: {version: '2.7'}
+    property :pip_install_opts, Hash, default: {}
+    property :build_opts, Hash, default: {}
+    property :git_opts, Hash, default: {}
+    property :git_client_opts, Hash, default: {}
+    property :service_opts, Hash, default: {}
 
-    def default_host_list
-      return [nil] unless ENV['DOCKER_HOST']
-      [ENV['DOCKER_HOST']]
+    def prefix_dir
+      "#{prefix}/#{name}"
+    end
+    def virtualenv_dir
+      "#{prefix_dir}/virtualenv"
+    end
+    def source_dir
+      "#{prefix_dir}/source"
     end
 
-    def pacifica_container_template(name, port, host)
-      container_template "pacifica/#{name}", port, host
-    end
+    default_action :create
 
-    def container_template(repo, port, host)
-      {
-        host: host,
-        repo: repo,
-        tag: tag,
-        port: "#{port}:#{port}",
-        kill_after: 10
+    action :create do
+      git_client name do
+        git_client_opts.each do |attr, value|
+          send(attr, value)
+        end
+      end
+      directory prefix_dir do
+        directory_opts.each do |attr, value|
+          send(attr, value)
+        end
+      end
+      git source_dir do
+        git_opts.each do |attr, value|
+          send(attr, value)
+        end
+      end
+      python_runtime name do
+        python_opts.each do |attr, value|
+          send(attr, value)
+        end
+      end
+      python_virtualenv virtualenv_dir do
+        virtualenv_opts.each do |attr, value|
+          send(attr, value)
+        end
+      end
+      python_execute "#{name}_requirements" do
+        virtualenv virtualenv_dir
+        command "-m pip install -r #{source_dir}/requirements.txt"
+        pip_install_opts.each do |attr, value|
+          send(attr, value)
+        end
+      end
+      python_execute "#{name}_build" do
+        virtualenv virtualenv_dir
+        cwd source_dir
+        command "setup.py install --prefix #{virtualenv_dir}"
+        only_if { ::File.exist?("#{source_dir}/setup.py") }
+        build_opts.each do |attr, value|
+          send(attr, value)
+        end
+      end
+      service_env = {
+        VIRTUAL_ENV: virtualenv_dir,
+        PATH: %W(
+          #{virtualenv_dir}/bin
+          /usr/local/sbin
+          /usr/local/bin
+          /sbin
+          /bin
+          /usr/sbin
+          /usr/bin
+        ).join(':')
       }
+      puts service_env
+      puts service_opts
+      service_env = service_env.merge(service_opts.delete(:environment)) if service_opts.has_key?(:environment)
+      puts service_opts
+      puts service_env
+      systemd_service name do
+        description "start #{name} in python"
+        after %w( network.target )
+        install do
+          wanted_by 'multi-user.target'
+        end
+        service do
+          working_directory source_dir
+          environment service_env
+          exec_start "#{virtualenv_dir}/bin/python #{source_dir}/server.py"
+          service_opts.each do |attr, value|
+            send(attr, value)
+          end
+        end
+      end
+      service name do
+        action [:enable, :start]
+      end
     end
-
-    def pacifica_image_template(name, host)
-      image_template "pacifica/#{name}", host
-    end
-
-    def image_template(repo, host)
-      {
-        host: host,
-        repo: repo,
-        tag: tag
-      }
-    end
-
-    property :host_list, Array, default: lazy { default_host_list }
-    property :tag, String, default: 'latest'
-    property :image_properties, Hash, default: {}
-    property :container_properties, Hash, default: {}
   end
 end

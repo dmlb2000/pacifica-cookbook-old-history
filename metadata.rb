@@ -8,4 +8,6 @@ version '0.1.0'
 issues_url 'https://github.com/pacifica/pacifica-cookbook/issues' if respond_to?(:issues_url)
 source_url 'https://github.com/pacifica/pacifica-cookbook' if respond_to?(:source_url)
 
-depends 'docker', '>= 2.13.0'
+depends 'git'
+depends 'poise-python'
+depends 'systemd'
