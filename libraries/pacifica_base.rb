@@ -76,11 +76,7 @@ module PacificaCookbook
           /usr/bin
         ).join(':')
       }
-      puts service_env
-      puts service_opts
       service_env = service_env.merge(service_opts.delete(:environment)) if service_opts.has_key?(:environment)
-      puts service_opts
-      puts service_env
       systemd_service name do
         description "start #{name} in python"
         after %w( network.target )
