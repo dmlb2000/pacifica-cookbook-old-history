@@ -1,5 +1,7 @@
+# pacifica cookbook module
 module PacificaCookbook
   require_relative 'pacifica_base'
+  # install and configure pacifica metadata service
   class PacificaMetadata < PacificaBase
     property :name, String, name_property: true
     property :git_opts, Hash, default: {

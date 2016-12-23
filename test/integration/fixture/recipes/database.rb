@@ -43,7 +43,7 @@ mysql_connection_info = {
     connection_info: postgresql_connection_info
   }
 }.each do |dbname, data|
-  database "#{dbname}" do
+  database dbname.to_s do
     provider data[:db_provider]
     connection data[:connection_info]
   end
@@ -52,7 +52,7 @@ mysql_connection_info = {
       provider data[:user_provider]
       connection data[:connection_info]
       password password
-      database_name "#{dbname}"
+      database_name dbname.to_s
       action data[:user_actions]
     end
   end

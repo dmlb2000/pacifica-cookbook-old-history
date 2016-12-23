@@ -31,6 +31,8 @@ group :kitchen_vagrant do
 end
 
 group :kitchen_cloud do
-  gem 'kitchen-digitalocean', git: 'https://github.com/someara/kitchen-digitalocean', branch: 'someara'
+  gem 'kitchen-digitalocean',
+      git: 'https://github.com/someara/kitchen-digitalocean',
+      branch: 'someara'
   gem 'kitchen-ec2'
 end

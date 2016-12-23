@@ -1,21 +1,30 @@
 module PacificaCookbook
+  # Pacifica base class with common properties and actions
   class PacificaBase < ChefCompat::Resource
+    ################
+    # Properties
+    ################
     property :prefix, String, default: '/opt'
     property :directory_opts, Hash, default: {}
     property :virtualenv_opts, Hash, default: {}
-    property :python_opts, Hash, default: {version: '2.7'}
+    property :python_opts, Hash, default: { version: '2.7' }
     property :pip_install_opts, Hash, default: {}
     property :build_opts, Hash, default: {}
     property :git_opts, Hash, default: {}
     property :git_client_opts, Hash, default: {}
     property :service_opts, Hash, default: {}
 
+    ##################
+    # Helper Methods
+    ##################
     def prefix_dir
       "#{prefix}/#{name}"
     end
+
     def virtualenv_dir
       "#{prefix_dir}/virtualenv"
     end
+
     def source_dir
       "#{prefix_dir}/source"
     end
@@ -76,7 +85,9 @@ module PacificaCookbook
           /usr/bin
         ).join(':')
       }
-      service_env = service_env.merge(service_opts.delete(:environment)) if service_opts.has_key?(:environment)
+      if service_opts.key?(:environment)
+        service_env = service_env.merge(service_opts.delete(:environment))
+      end
       systemd_service name do
         description "start #{name} in python"
         after %w( network.target )
