@@ -24,36 +24,65 @@ mysql_connection_info = {
 }
 
 {
+  uniqueid: {
+    provider: Chef::Provider::Database::Mysql,
+    connection: mysql_connection_info,
+  },
+  ingest: {
+    provider: Chef::Provider::Database::Mysql,
+    connection: mysql_connection_info,
+  },
   cartd: {
-    users: {
-      cart: 'cart',
-    },
-    db_provider: Chef::Provider::Database::Mysql,
-    user_provider: Chef::Provider::Database::MysqlUser,
-    user_actions: [:grant],
-    connection_info: mysql_connection_info,
+    provider: Chef::Provider::Database::Mysql,
+    connection: mysql_connection_info,
   },
   metadata: {
-    users: {
-      metadata: 'metadata',
-    },
-    db_provider: Chef::Provider::Database::Postgresql,
-    user_provider: Chef::Provider::Database::PostgresqlUser,
-    user_actions: [:create, :grant],
-    connection_info: postgresql_connection_info,
+    provider: Chef::Provider::Database::Postgresql,
+    connection: postgresql_connection_info,
   },
 }.each do |dbname, data|
   database dbname.to_s do
-    provider data[:db_provider]
-    connection data[:connection_info]
+    data.each do |attr, value|
+      send(attr.to_s, value)
+    end
   end
-  data[:users].each do |username, password|
-    database_user username do
-      provider data[:user_provider]
-      connection data[:connection_info]
-      password password
-      database_name dbname.to_s
-      action data[:user_actions]
+end
+{
+  uniqueid: {
+    password: 'uniqueid',
+    connection: mysql_connection_info,
+    host: '127.0.0.1',
+    database_name: 'uniqueid',
+    action: [:grant],
+    provider: Chef::Provider::Database::MysqlUser,
+  },
+  cart: {
+    password: 'cart',
+    connection: mysql_connection_info,
+    host: '127.0.0.1',
+    database_name: 'cartd',
+    action: [:grant],
+    provider: Chef::Provider::Database::MysqlUser,
+  },
+  ingest: {
+    password: 'ingest',
+    connection: mysql_connection_info,
+    host: '127.0.0.1',
+    database_name: 'ingest',
+    action: [:grant],
+    provider: Chef::Provider::Database::MysqlUser,
+  },
+  metadata: {
+    password: 'metadata',
+    database_name: 'metadata',
+    provider: Chef::Provider::Database::PostgresqlUser,
+    connection: postgresql_connection_info,
+    action: [:create, :grant],
+  },
+}.each do |user, data|
+  database_user user.to_s do
+    data.each do |attr, value|
+      send(attr, value)
     end
   end
 end
