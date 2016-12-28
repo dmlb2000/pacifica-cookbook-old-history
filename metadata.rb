@@ -15,3 +15,4 @@ end
 depends 'git'
 depends 'poise-python'
 depends 'systemd'
+depends 'php'
