@@ -1,4 +1,4 @@
-name 'fake'
+name 'test'
 version '0.1.0'
 depends 'pacifica'
 depends 'rabbitmq', '>= 4.10.0'
