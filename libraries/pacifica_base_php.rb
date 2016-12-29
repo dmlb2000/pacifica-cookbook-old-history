@@ -42,7 +42,6 @@ module PacificaCookbook
       include_recipe 'php::module_pgsql'
       include_recipe 'php::module_sqlite3'
       include_recipe 'php::module_gd'
-      include_recipe 'php::module_memcache'
       php_fpm_pool name do
         listen "/var/run/php5-fpm-#{name}.sock"
         chdir source_dir

@@ -5,7 +5,16 @@
 # The Inspec reference, with examples and extensive documentation, can be
 # found at https://docs.chef.io/inspec_reference.html
 
-describe port(80) do
-  it { should_not be_listening }
-  skip 'This is an example test, replace with your own test.'
+%w(
+8080
+8081
+8066
+8121
+8181
+8051
+80
+).each do |port|
+  describe port(port.to_i) do
+    it { should be_listening }
+  end
 end
