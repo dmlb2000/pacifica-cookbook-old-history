@@ -16,48 +16,12 @@ Check out [How Cookbooks are Maintained](https://github.com/chef-cookbooks/commu
     [Org.Components.Core]
       title = "Project Maintainer"
 
-      lieutenant = 'someara'
+      lieutenant = 'dmlb2000'
 
       maintainers = [
-        'sigje',
-        'someara',
-        'tas50',
-        'thommay',
-        'scalp42',
-        'chasebolt',
-        'bflad',
-        'tduffield'
       ]
 
 [people]
-  [people.sigje]
-    name = "Jennifer Davis"
-    github = "sigje"
-
-  [people.someara]
-    name = "Sean OMeara"
-    github = "someara"
-
-  [people.tas50]
-    name = "Tim Smith"
-    github = "tas50"
-
-  [people.thommay]
-    name = "Thom May"
-    github = "thommay"
-
-  [people.scalp42]
-    name = "Anthony Scalisi"
-    github = "scalp42"
-
-  [people.chasebolt]
-    name = "Chase Bolt"
-    github = "chasebolt"
-
-  [people.bflad]
-    name = "Brian Flad"
-    github = "bflad"
-
-  [people.tduffield]
-    name = "Tom Duffield"
-    github = "tduffield"
+  [people.dmlb2000]
+    name = "David Brown"
+    github = "dmlb2000"

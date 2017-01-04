@@ -1,4 +1,4 @@
-include_recipe 'database::postgresql'
+include_recipe 'postgresql::ruby'
 include_recipe 'postgresql::server'
 
 include_recipe 'yum-mysql-community::mysql56'
