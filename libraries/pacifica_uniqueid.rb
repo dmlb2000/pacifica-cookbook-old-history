@@ -9,7 +9,7 @@ module PacificaCookbook
     }
     property :service_opts, Hash, default: lazy {
       {
-        exec_start: "#{virtualenv_dir}/bin/python UniqueIDServer.py",
+        exec_start: "#{virtualenv_dir}/bin/uwsgi --http-socket :8051 --wsgi-file UniqueIDServer.py",
         environment: {
           MYSQL_PORT_3306_TCP_ADDR: '127.0.0.1',
           MYSQL_ENV_MYSQL_DATABASE: 'uniqueid',

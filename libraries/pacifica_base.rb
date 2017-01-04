@@ -64,6 +64,11 @@ module PacificaCookbook
           send(attr, value)
         end
       end
+      python_execute "#{name}_uwsgi" do
+        virtualenv virtualenv_dir
+        command "-m pip install uwsgi"
+        not_if { ::File.exist?("#{virtualenv_dir}/bin/uwsgi") }
+      end
       python_execute "#{name}_build" do
         virtualenv virtualenv_dir
         cwd source_dir
@@ -97,7 +102,7 @@ module PacificaCookbook
         service do
           working_directory source_dir
           environment service_env
-          exec_start "#{virtualenv_dir}/bin/python #{source_dir}/server.py"
+          exec_start "#{virtualenv_dir}/bin/uwsgi --http-socket :8080 --wsgi-file #{source_dir}/server.py"
           service_opts.each do |attr, value|
             send(attr, value)
           end
