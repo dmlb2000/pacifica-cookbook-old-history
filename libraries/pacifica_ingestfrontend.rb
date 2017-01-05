@@ -23,9 +23,8 @@ module PacificaCookbook
         },
       }
     }
-    property :run_command, String, default: lazy {
-      "#{virtualenv_dir}/bin/uwsgi --http-socket :8066 --wsgi-file #{source_dir}/IngestServer.py"
-    }
+    property :wsgi_file, String, default: 'IngestServer.py'
+    property :port, String, default: 8066
     resource_name :pacifica_ingestfrontend
   end
 end

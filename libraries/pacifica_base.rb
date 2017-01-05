@@ -14,8 +14,13 @@ module PacificaCookbook
     property :git_opts, Hash, default: {}
     property :git_client_opts, Hash, default: {}
     property :service_opts, Hash, default: {}
+    property :wsgi_file, String, default: 'server.py'
+    property :port, Integer, default: 8080
     property :run_command, String, default: lazy {
-      "#{virtualenv_dir}/bin/uwsgi --http-socket :8080 --wsgi-file #{source_dir}/server.py"
+      "#{virtualenv_dir}/bin/uwsgi "\
+      "--http-socket :#{port} "\
+      "--master -p #{node['cpu']['total']} "\
+      "--wsgi-file #{source_dir}/#{wsgi_file}"
     }
 
     ##################

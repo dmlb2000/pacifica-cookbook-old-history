@@ -16,9 +16,8 @@ module PacificaCookbook
         },
       }
     }
-    property :run_command, String, default: lazy {
-      "#{virtualenv_dir}/bin/uwsgi --http-socket :8121 --wsgi-file MetadataServer.py"
-    }
+    property :wsgi_file, String, default: 'MetadataServer.py'
+    property :port, Integer, default: 8121
     resource_name :pacifica_metadata
   end
 end

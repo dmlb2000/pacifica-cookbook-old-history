@@ -17,9 +17,8 @@ module PacificaCookbook
         },
       }
     }
-    property :run_command, String, default: lazy {
-      "#{virtualenv_dir}/bin/uwsgi --http-socket :8051 --wsgi-file UniqueIDServer.py"
-    }
+    property :wsgi_file, String, default: 'UniqueIDServer.py'
+    property :port, Integer, default: 8051
     resource_name :pacifica_uniqueid
   end
 end

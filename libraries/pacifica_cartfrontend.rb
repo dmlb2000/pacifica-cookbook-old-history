@@ -23,9 +23,8 @@ module PacificaCookbook
         },
       }
     }
-    property :run_command, String, default: lazy {
-      "#{virtualenv_dir}/bin/uwsgi --http-socket :8081 --wsgi-file #{source_dir}/cartserver.py "
-    }
+    property :wsgi_file, String, default: 'cartserver.py'
+    property :port, Integer, default: 8081
     resource_name :pacifica_cartfrontend
   end
 end

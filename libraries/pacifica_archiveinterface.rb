@@ -15,10 +15,12 @@ module PacificaCookbook
 export LD_LIBRARY_PATH=/opt/chef/embedded/lib
 export LD_RUN_PATH=/opt/chef/embedded/lib
 cd /
-exec -a #{name} #{virtualenv_dir}/bin/uwsgi --http-socket :8080 --wsgi-file #{source_dir}/archiveinterface/wsgi.py
+exec -a #{name} #{run_command}
 EOF
       }
     }
+    property :wsgi_file, String, default: 'archiveinterface/wsgi.py'
+    property :port, Integer, default: 8080
     resource_name :pacifica_archiveinterface
   end
 end
