@@ -9,7 +9,6 @@ module PacificaCookbook
     }
     property :service_opts, Hash, default: lazy {
       {
-        exec_start: "#{virtualenv_dir}/bin/uwsgi --http-socket :8051 --wsgi-file UniqueIDServer.py",
         environment: {
           MYSQL_PORT_3306_TCP_ADDR: '127.0.0.1',
           MYSQL_ENV_MYSQL_DATABASE: 'uniqueid',
@@ -17,6 +16,9 @@ module PacificaCookbook
           MYSQL_ENV_MYSQL_PASSWORD: 'uniqueid',
         },
       }
+    }
+    property :run_command, String, default: lazy {
+      "#{virtualenv_dir}/bin/uwsgi --http-socket :8051 --wsgi-file UniqueIDServer.py"
     }
     resource_name :pacifica_uniqueid
   end

@@ -9,8 +9,6 @@ module PacificaCookbook
     }
     property :service_opts, Hash, default: lazy {
       {
-        exec_start: "#{virtualenv_dir}/bin/python -m celery "\
-                    '-A cart worker -l info',
         environment: {
           VOLUME_PATH: "#{prefix_dir}/cartdata/",
           LRU_BUFFER_TIME: 0,
@@ -18,6 +16,9 @@ module PacificaCookbook
           MYSQL_ENV_MYSQL_USER: 'cart',
         },
       }
+    }
+    property :run_command, String, default: lazy {
+      "#{virtualenv_dir}/bin/python -m celery -A cart worker -l info"
     }
     resource_name :pacifica_cartbackend
   end

@@ -7,10 +7,8 @@ module PacificaCookbook
     property :git_opts, Hash, default: {
       repository: 'https://github.com/EMSL-MSC/pacifica-policy.git',
     }
-    property :service_opts, Hash, default: lazy {
-      {
-        exec_start: "#{virtualenv_dir}/bin/python PolicyServer.py",
-      }
+    property :run_command, String, default: lazy {
+      "#{virtualenv_dir}/bin/uwsgi --http-socket :8181 --wsgi-file PolicyServer.py"
     }
     resource_name :pacifica_policy
   end

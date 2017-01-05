@@ -9,14 +9,15 @@ module PacificaCookbook
     }
     property :service_opts, Hash, default: lazy {
       {
-        exec_start: "#{virtualenv_dir}/bin/python -m celery "\
-                    '-A ingest.backend worker -l info',
         environment: {
           VOLUME_PATH: "#{prefix_dir}/ingestdata",
           MYSQL_ENV_MYSQL_PASSWORD: 'ingest',
           MYSQL_ENV_MYSQL_USER: 'ingest',
         },
       }
+    }
+    property :run_command, String, default: lazy {
+      "#{virtualenv_dir}/bin/python -m celery -A ingest.backend worker -l info"
     }
     resource_name :pacifica_ingestbackend
   end

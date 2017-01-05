@@ -15,9 +15,6 @@ module PacificaCookbook
     }
     property :service_opts, Hash, default: lazy {
       {
-        exec_start: "#{virtualenv_dir}/bin/python "\
-                    "#{source_dir}/cartserver.py "\
-                    '--port 8081 --address 0.0.0.0',
         environment: {
           VOLUME_PATH: "#{prefix_dir}/cartdata/",
           LRU_BUFFER_TIME: 0,
@@ -25,6 +22,9 @@ module PacificaCookbook
           MYSQL_ENV_MYSQL_USER: 'cart',
         },
       }
+    }
+    property :run_command, String, default: lazy {
+      "#{virtualenv_dir}/bin/uwsgi --http-socket :8081 --wsgi-file #{source_dir}/cartserver.py "
     }
     resource_name :pacifica_cartfrontend
   end

@@ -10,9 +10,13 @@ module PacificaCookbook
     property :python_opts, Hash, default: { version: '2.7' }
     property :pip_install_opts, Hash, default: {}
     property :build_opts, Hash, default: {}
+    property :script_opts, Hash, default: {}
     property :git_opts, Hash, default: {}
     property :git_client_opts, Hash, default: {}
     property :service_opts, Hash, default: {}
+    property :run_command, String, default: lazy {
+      "#{virtualenv_dir}/bin/uwsgi --http-socket :8080 --wsgi-file #{source_dir}/server.py"
+    }
 
     ##################
     # Helper Methods
@@ -66,7 +70,7 @@ module PacificaCookbook
       end
       python_execute "#{name}_uwsgi" do
         virtualenv virtualenv_dir
-        command "-m pip install uwsgi"
+        command '-m pip install uwsgi'
         not_if { ::File.exist?("#{virtualenv_dir}/bin/uwsgi") }
       end
       python_execute "#{name}_build" do
@@ -78,20 +82,21 @@ module PacificaCookbook
           send(attr, value)
         end
       end
-      service_env = {
-        VIRTUAL_ENV: virtualenv_dir,
-        PATH: %W(
-          #{virtualenv_dir}/bin
-          /usr/local/sbin
-          /usr/local/bin
-          /sbin
-          /bin
-          /usr/sbin
-          /usr/bin
-        ).join(':'),
-      }
-      if service_opts.key?(:environment)
-        service_env = service_env.merge(service_opts.delete(:environment))
+      file "#{prefix_dir}/#{name}" do
+        owner 'root'
+        group 'root'
+        mode '0700'
+        content <<END_HEREDOC
+#!/bin/bash
+. #{virtualenv_dir}/bin/activate
+export LD_LIBRARY_PATH=/opt/chef/embedded/lib
+export LD_RUN_PATH=/opt/chef/embedded/lib
+cd #{source_dir}
+exec -a #{new_resource.name} #{run_command}
+END_HEREDOC
+        script_opts.each do |attr, value|
+          send(attr, value)
+        end
       end
       systemd_service name do
         description "start #{name} in python"
@@ -101,8 +106,7 @@ module PacificaCookbook
         end
         service do
           working_directory source_dir
-          environment service_env
-          exec_start "#{virtualenv_dir}/bin/uwsgi --http-socket :8080 --wsgi-file #{source_dir}/server.py"
+          exec_start "#{prefix_dir}/#{name}"
           service_opts.each do |attr, value|
             send(attr, value)
           end

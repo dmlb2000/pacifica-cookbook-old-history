@@ -9,13 +9,15 @@ module PacificaCookbook
     }
     property :service_opts, Hash, default: lazy {
       {
-        exec_start: "#{virtualenv_dir}/bin/python MetadataServer.py",
         environment: {
           POSTGRES_ENV_POSTGRES_DB: 'metadata',
           POSTGRES_ENV_POSTGRES_USER: 'metadata',
           POSTGRES_ENV_POSTGRES_PASSWORD: 'metadata',
         },
       }
+    }
+    property :run_command, String, default: lazy {
+      "#{virtualenv_dir}/bin/uwsgi --http-socket :8121 --wsgi-file MetadataServer.py"
     }
     resource_name :pacifica_metadata
   end

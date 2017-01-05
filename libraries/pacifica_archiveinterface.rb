@@ -7,9 +7,17 @@ module PacificaCookbook
     property :git_opts, Hash, default: {
       repository: 'https://github.com/EMSL-MSC/pacifica-archiveinterface.git',
     }
-    property :service_opts, Hash, default: lazy {
-      { exec_start: "#{virtualenv_dir}/bin/python "\
-                    "#{source_dir}/scripts/archiveinterfaceserver.py" }
+    property :script_opts, Hash, default: lazy {
+      {
+        content: <<EOF
+#!/bin/bash
+. #{virtualenv_dir}/bin/activate
+export LD_LIBRARY_PATH=/opt/chef/embedded/lib
+export LD_RUN_PATH=/opt/chef/embedded/lib
+cd /
+exec -a #{name} #{virtualenv_dir}/bin/uwsgi --http-socket :8080 --wsgi-file #{source_dir}/archiveinterface/wsgi.py
+EOF
+      }
     }
     resource_name :pacifica_archiveinterface
   end
