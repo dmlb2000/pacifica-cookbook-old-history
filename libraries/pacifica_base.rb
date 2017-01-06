@@ -99,6 +99,7 @@ export LD_RUN_PATH=/opt/chef/embedded/lib
 cd #{source_dir}
 exec -a #{new_resource.name} #{run_command}
 END_HEREDOC
+        notifies :restart, "service[#{new_resource.name}]"
         script_opts.each do |attr, value|
           send(attr, value)
         end

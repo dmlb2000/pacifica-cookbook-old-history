@@ -10,6 +10,7 @@ module PacificaCookbook
     property :service_opts, Hash, default: lazy {
       {
         environment: {
+          PYTHONPATH: "#{virtualenv_dir}/lib/python2.7/site-packages",
           VOLUME_PATH: "#{prefix_dir}/ingestdata",
           MYSQL_ENV_MYSQL_PASSWORD: 'ingest',
           MYSQL_ENV_MYSQL_USER: 'ingest',
