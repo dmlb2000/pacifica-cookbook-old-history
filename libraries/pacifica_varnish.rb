@@ -24,6 +24,7 @@ module PacificaCookbook
     default_action :create
 
     action :create do
+      include_recipe 'chef-sugar'
       varnish_repo name do
         repo_opts.each do |key, attr|
           send(key, attr)
