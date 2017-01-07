@@ -52,6 +52,12 @@ module PacificaCookbook
       service 'varnish' do
         action [:enable, :start]
       end
+      file '/var/log/varnish/varnishlog.log' do
+        action [:create_if_missing]
+      end
+      execute 'restorecon /var/log/varnish/*' do
+        only_if { rhel? }
+      end
       varnish_log 'default'
     end
   end
