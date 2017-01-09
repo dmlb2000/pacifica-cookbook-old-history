@@ -117,6 +117,7 @@ END_HEREDOC
             send(attr, value)
           end
         end
+        notifies :restart, "service[#{new_resource.name}]"
       end
       service name do
         action [:enable, :start]
