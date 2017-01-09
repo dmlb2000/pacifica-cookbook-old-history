@@ -5,7 +5,7 @@ module PacificaCookbook
   class PacificaVarnish < ChefCompat::Resource
     property :name, String, name_property: true
     property :backend_hosts, Array, default: []
-    property :listen_port, Integer, default: 80
+    property :listen_port, Integer, default: 6081
     property :repo_opts, Hash, default: {}
     property :config_opts, Hash, default: {}
     property :template_opts, Hash, default: {}
