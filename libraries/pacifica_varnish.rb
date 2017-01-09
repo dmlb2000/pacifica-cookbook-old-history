@@ -34,7 +34,7 @@ module PacificaCookbook
       varnish_config 'default' do
         listen_address '0.0.0.0'
         admin_listen_address '127.0.0.1'
-        listen_port listen_port
+        listen_port new_resource.listen_port
         config_opts.each do |key, attr|
           send(key, attr)
         end
