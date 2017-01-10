@@ -5,12 +5,16 @@ include_recipe 'yum-mysql-community::mysql56'
 mysql2_chef_gem 'default' do
   provider Chef::Provider::Mysql2ChefGem::Mysql
 end
+mysql_service 'default' do
+  initial_root_password 'mysql'
+  action [:create]
+end
 execute 'chcon -R system_u:object_r:mysqld_db_t:s0 /var/lib/mysql-default' do
   only_if { rhel? }
 end
 mysql_service 'default' do
   initial_root_password 'mysql'
-  action [:create, :start]
+  action [:start]
 end
 
 postgresql_connection_info = {
