@@ -16,6 +16,7 @@ module PacificaCookbook
     action :create do
       include_recipe 'chef-sugar'
       include_recipe 'selinux_policy::install' if rhel?
+      include_recipe 'yum-epel' if rhel?
       package 'nginx'
       selinux_policy_port listen_port do
         protocol 'tcp'
