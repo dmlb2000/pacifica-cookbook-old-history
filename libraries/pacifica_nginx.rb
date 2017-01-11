@@ -26,11 +26,11 @@ module PacificaCookbook
         value true
         only_if { rhel? }
       end
-      if rhel?
-        nginx_user = 'nginx'
-      else
-        nginx_user = 'www-data'
-      end
+      nginx_user = if rhel?
+                     'nginx'
+                   else
+                     'www-data'
+                   end
       template "nginx_#{name}_conf" do
         cookbook 'pacifica'
         source 'nginx.conf.erb'
