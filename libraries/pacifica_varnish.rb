@@ -26,6 +26,15 @@ module PacificaCookbook
     action :create do
       include_recipe 'chef-sugar'
       include_recipe 'selinux_policy::install' if rhel?
+      selinux_policy_port listen_port do
+        protocol 'tcp'
+        secontext 'varnishd_port_t'
+        only_if { rhel? }
+      end
+      selinux_policy_boolean 'varnishd_connect_any' do
+        value true
+        only_if { rhel? }
+      end
       varnish_repo name do
         repo_opts.each do |key, attr|
           send(key, attr)
@@ -40,15 +49,6 @@ module PacificaCookbook
         config_opts.each do |key, attr|
           send(key, attr)
         end
-      end
-      selinux_policy_port listen_port do
-        protocol 'tcp'
-        secontext 'varnishd_port_t'
-        only_if { rhel? }
-      end
-      selinux_policy_boolean 'varnishd_connect_any' do
-        value true
-        only_if { rhel? }
       end
       vcl_template 'default.vcl' do
         cookbook 'pacifica'
