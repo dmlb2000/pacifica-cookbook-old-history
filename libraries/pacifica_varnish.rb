@@ -25,7 +25,7 @@ module PacificaCookbook
 
     action :create do
       include_recipe 'chef-sugar'
-      include_recipe 'selinux_policy::install'
+      include_recipe 'selinux_policy::install' if rhel?
       varnish_repo name do
         repo_opts.each do |key, attr|
           send(key, attr)
@@ -36,6 +36,7 @@ module PacificaCookbook
         listen_address '0.0.0.0'
         admin_listen_address '127.0.0.1'
         listen_port new_resource.listen_port
+        notifies :restart, "service[varnish]"
         config_opts.each do |key, attr|
           send(key, attr)
         end
@@ -56,6 +57,7 @@ module PacificaCookbook
           endpoint_name: new_resource.name,
           backend_hosts: vlc_hosts
         )
+        notifies :restart, "service[varnish]"
         template_opts.each do |key, attr|
           send(key, attr)
         end

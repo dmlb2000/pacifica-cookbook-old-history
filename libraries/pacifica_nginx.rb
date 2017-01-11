@@ -15,7 +15,7 @@ module PacificaCookbook
 
     action :create do
       include_recipe 'chef-sugar'
-      include_recipe 'selinux_policy::install'
+      include_recipe 'selinux_policy::install' if rhel?
       package 'nginx'
       selinux_policy_port listen_port do
         protocol 'tcp'
@@ -26,10 +26,17 @@ module PacificaCookbook
         value true
         only_if { rhel? }
       end
+      if rhel?
+        nginx_user = 'nginx'
+      else
+        nginx_user = 'www-data'
+      end
       template "nginx_#{name}_conf" do
         cookbook 'pacifica'
         source 'nginx.conf.erb'
         path '/etc/nginx/nginx.conf'
+        variables(user: nginx_user)
+        notifies :restart, 'service[nginx]'
         nginx_opts.each do |key, attr|
           send(key, attr)
         end
@@ -40,13 +47,19 @@ module PacificaCookbook
         path "/etc/nginx/conf.d/#{name}.conf"
         variables(
           name: new_resource.name,
+          user: nginx_user,
           server_name: 'localhost.localdomain',
           listen_port: new_resource.listen_port,
           backend_hosts: new_resource.backend_hosts
         )
+        notifies :restart, 'service[nginx]'
         nginx_site_opts.each do |key, attr|
           send(key, attr)
         end
+      end
+      file '/etc/nginx/sites-enabled/default' do
+        action [:delete]
+        notifies :restart, 'service[nginx]'
       end
       service 'nginx' do
         action [:enable, :start]
