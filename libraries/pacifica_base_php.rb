@@ -44,10 +44,10 @@ module PacificaCookbook
       include_recipe 'php::module_gd'
       # do some calculations to make it work based on system size
       default_attrs = {
-        max_children: node['cpu']['total']*4,
+        max_children: node['cpu']['total'] * 4,
         start_servers: node['cpu']['total'],
         min_spare_servers: node['cpu']['total'],
-        max_spare_servers: node['cpu']['total']
+        max_spare_servers: node['cpu']['total'],
       }
       php_fpm_pool name do
         listen "/var/run/php5-fpm-#{name}.sock"

@@ -9,11 +9,11 @@ require 'spec_helper'
 describe 'test::pacifica' do
   context 'stepping into archive interface' do
     let(:chef_run) do
-      runner = ChefSpec::ServerRunner.new(
+      Chef::Config[:config_file] = '/etc/chef/default.rb'
+      ChefSpec::ServerRunner.new(
         platform: 'centos', version: '7.2.1511',
         step_into: 'pacifica_archiveinterface'
-      )
-      runner.converge(described_recipe)
+      ).converge(described_recipe)
     end
 
     it 'installs git client' do
