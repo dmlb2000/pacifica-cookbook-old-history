@@ -53,14 +53,14 @@ module PacificaCookbook
         max_spare_servers: node['cpu']['total'],
       }
       ipaddress, listen_port = if php_fpm_opts.key?('listen')
-                          php_fpm_opts['listen'].split(':')
-                        else
-                          %w(127.0.0.1 9000)
-                        end
+                                 php_fpm_opts['listen'].split(':')
+                               else
+                                 %w(127.0.0.1 9000)
+                               end
       selinux_policy_port listen_port do
         protocol 'tcp'
         secontext 'http_port_t'
-        only_if { rhel? and IPAddress.valid? ipaddress }
+        only_if { rhel? && IPAddress.valid? ipaddress }
       end
       php_fpm_pool name do
         listen "/var/run/php5-fpm-#{name}.sock"
