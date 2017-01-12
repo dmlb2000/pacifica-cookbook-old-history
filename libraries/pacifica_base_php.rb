@@ -42,7 +42,7 @@ module PacificaCookbook
           send(attr, value)
         end
       end
-      directory "#{source_dir}/applications/logs"
+      directory "#{source_dir}/application/logs"
       apache_user = if rhel?
                       'apache'
                     else
