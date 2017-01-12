@@ -6,6 +6,7 @@ module PacificaCookbook
     # Properties
     ################
     property :prefix, String, default: '/opt'
+    property :site_fqdn, String, default: 'http://127.0.0.1'
     property :directory_opts, Hash, default: {}
     property :git_opts, Hash, default: {}
     property :git_client_opts, Hash, default: {}
@@ -40,6 +41,10 @@ module PacificaCookbook
         git_opts.each do |attr, value|
           send(attr, value)
         end
+      end
+      execute 'create_site_fqdn' do
+        command %Q(echo "$config['base_url'] = #{site_fqdn}" >> #{source_dir}/application/config/production/config.php)
+        not_if "grep -q #{site_fqdn} #{source_dir}/application/config/production/config.php"
       end
       include_recipe 'php'
       include_recipe 'php::module_pgsql'
