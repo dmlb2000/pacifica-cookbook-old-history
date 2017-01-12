@@ -67,6 +67,10 @@ module PacificaCookbook
         secontext 'http_port_t'
         only_if { rhel? && IPAddress.valid?(ipaddress) }
       end
+      selinux_policy_boolean 'httpd_can_network_connect' do
+        value true
+        only_if { rhel? }
+      end
       php_fpm_pool name do
         listen "/var/run/php5-fpm-#{name}.sock"
         chdir source_dir
