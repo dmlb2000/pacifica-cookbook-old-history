@@ -22,6 +22,9 @@ module PacificaCookbook
     default_action :create
 
     action :create do
+      require 'ipaddress'
+      include_recipe 'chef-sugar'
+      include_recipe 'selinux_policy::install' if rhel?
       git_client name do
         git_client_opts.each do |attr, value|
           send(attr, value)
@@ -49,6 +52,16 @@ module PacificaCookbook
         min_spare_servers: node['cpu']['total'],
         max_spare_servers: node['cpu']['total'],
       }
+      ipaddress, listen_port = if php_fpm_opts.key?('listen')
+                          php_fpm_opts['listen'].split(':')
+                        else
+                          %w(127.0.0.1 9000)
+                        end
+      selinux_policy_port listen_port do
+        protocol 'tcp'
+        secontext 'http_port_t'
+        only_if { rhel? and IPAddress.valid? ipaddress }
+      end
       php_fpm_pool name do
         listen "/var/run/php5-fpm-#{name}.sock"
         chdir source_dir
