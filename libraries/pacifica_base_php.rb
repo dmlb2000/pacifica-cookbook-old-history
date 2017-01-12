@@ -66,9 +66,13 @@ module PacificaCookbook
         listen "/var/run/php5-fpm-#{name}.sock"
         chdir source_dir
         max_children
+        notifies :restart, "service[php-fpm]"
         default_attrs.merge(php_fpm_opts).each do |attr, value|
           send(attr, value)
         end
+      end
+      service 'php-fpm' do
+        action [:enable, :start]
       end
     end
   end
