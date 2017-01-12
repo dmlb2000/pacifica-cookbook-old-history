@@ -60,7 +60,7 @@ module PacificaCookbook
       selinux_policy_port listen_port do
         protocol 'tcp'
         secontext 'http_port_t'
-        only_if { rhel? && IPAddress.valid? ipaddress }
+        only_if { rhel? && IPAddress.valid?(ipaddress) }
       end
       php_fpm_pool name do
         listen "/var/run/php5-fpm-#{name}.sock"
