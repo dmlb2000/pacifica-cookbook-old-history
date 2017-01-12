@@ -52,8 +52,8 @@ module PacificaCookbook
         min_spare_servers: node['cpu']['total'],
         max_spare_servers: node['cpu']['total'],
       }
-      ipaddress, listen_port = if php_fpm_opts.key?('listen')
-                                 php_fpm_opts['listen'].split(':')
+      ipaddress, listen_port = if php_fpm_opts.key?(:listen)
+                                 php_fpm_opts[:listen].split(':')
                                else
                                  %w(127.0.0.1 9000)
                                end
