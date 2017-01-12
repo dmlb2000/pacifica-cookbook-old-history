@@ -42,9 +42,18 @@ module PacificaCookbook
           send(attr, value)
         end
       end
+      apache_user = if rhel?
+                      'apache'
+                    else
+                      'www-data'
+                    end
+      execute "chown -R #{apache_user}:#{apache_user} #{source_dir}"
       execute 'create_site_fqdn' do
         command %Q(echo "$config['base_url'] = #{site_fqdn}" >> #{source_dir}/application/config/production/config.php)
         not_if "grep -q #{site_fqdn} #{source_dir}/application/config/production/config.php"
+      end
+      execute "chcon -R system_u:object_r:httpd_sys_content_t:s0 #{source_dir}" do
+        only_if { rhel? }
       end
       include_recipe 'php'
       include_recipe 'php::module_pgsql'
