@@ -6,6 +6,7 @@ module PacificaCookbook
     # Properties
     ################
     property :prefix, String, default: '/opt'
+    property :site_fqdn, String, default: 'http://127.0.0.1'
     property :directory_opts, Hash, default: {}
     property :git_opts, Hash, default: {}
     property :git_client_opts, Hash, default: {}
@@ -41,6 +42,20 @@ module PacificaCookbook
           send(attr, value)
         end
       end
+      directory "#{source_dir}/application/logs"
+      apache_user = if rhel?
+                      'apache'
+                    else
+                      'www-data'
+                    end
+      execute "chown -R #{apache_user}:#{apache_user} #{source_dir}"
+      execute 'create_site_fqdn' do
+        command %Q(echo "\\$config['base_url'] = '#{site_fqdn}';" >> #{source_dir}/application/config/production/config.php)
+        not_if "grep -q #{site_fqdn} #{source_dir}/application/config/production/config.php"
+      end
+      execute "chcon -R system_u:object_r:httpd_sys_content_t:s0 #{source_dir}" do
+        only_if { rhel? }
+      end
       include_recipe 'php'
       include_recipe 'php::module_pgsql'
       include_recipe 'php::module_sqlite3'
@@ -61,6 +76,10 @@ module PacificaCookbook
         protocol 'tcp'
         secontext 'http_port_t'
         only_if { rhel? && IPAddress.valid?(ipaddress) }
+      end
+      selinux_policy_boolean 'httpd_can_network_connect' do
+        value true
+        only_if { rhel? }
       end
       php_fpm_pool name do
         listen "/var/run/php5-fpm-#{name}.sock"

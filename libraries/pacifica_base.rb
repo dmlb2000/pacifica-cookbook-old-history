@@ -52,6 +52,7 @@ module PacificaCookbook
         end
       end
       git source_dir do
+        notifies :restart, "service[#{new_resource.name}]"
         git_opts.each do |attr, value|
           send(attr, value)
         end
