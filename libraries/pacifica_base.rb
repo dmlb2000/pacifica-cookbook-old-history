@@ -94,6 +94,7 @@ module PacificaCookbook
         content <<END_HEREDOC
 #!/bin/bash
 . #{virtualenv_dir}/bin/activate
+export PYTHONPATH=#{virtualenv_dir}/lib64/python2.7/site-packages
 export LD_LIBRARY_PATH=/opt/chef/embedded/lib
 export LD_RUN_PATH=/opt/chef/embedded/lib
 cd #{source_dir}
