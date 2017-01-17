@@ -17,7 +17,6 @@ module PacificaCookbook
       include_recipe 'chef-sugar'
       include_recipe 'selinux_policy::install' if rhel?
       include_recipe 'yum-epel' if rhel?
-      package 'nginx'
       selinux_policy_port listen_port do
         protocol 'tcp'
         secontext 'http_port_t'
@@ -32,6 +31,7 @@ module PacificaCookbook
                    else
                      'www-data'
                    end
+      directory '/etc/nginx'
       template "nginx_#{name}_conf" do
         cookbook 'pacifica'
         source 'nginx.conf.erb'
@@ -42,6 +42,7 @@ module PacificaCookbook
           send(key, attr)
         end
       end
+      package 'nginx'
       template "nginx_#{name}_site_conf" do
         cookbook 'pacifica'
         source 'nginx-site.conf.erb'
