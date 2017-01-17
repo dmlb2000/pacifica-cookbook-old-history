@@ -68,6 +68,20 @@ module PacificaCookbook
       file '/var/log/varnish/varnishlog.log' do
         action [:create_if_missing]
       end
+      selinux_policy_module 'allow_varnishlog_vsm' do
+        content <<-eos
+	module allow_varnishlog_vsm 1.0;
+
+        require {
+          type varnishlog_t;
+          type varnishd_var_lib_t;
+          class lnk_file { read };
+        }
+	#============= varnishlog_t ==============
+	allow varnishlog_t varnishd_var_lib_t:lnk_file read;
+        eos
+	action :deploy
+      end
       execute 'restorecon /var/log/varnish/*' do
         only_if { rhel? }
       end
