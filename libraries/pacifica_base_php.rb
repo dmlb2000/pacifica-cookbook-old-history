@@ -44,15 +44,15 @@ module PacificaCookbook
       end
       directory "#{source_dir}/application/logs"
       apache_user = if rhel?
-	              package 'httpd'
+                      package 'httpd'
                       'apache'
                     else
-	              package 'apache2'
+                      package 'apache2'
                       'www-data'
                     end
       execute "chown -R #{apache_user}:#{apache_user} #{source_dir}"
       execute 'create_site_fqdn' do
-        command %Q(echo "\\$config['base_url'] = '#{site_fqdn}';" >> #{source_dir}/application/config/production/config.php)
+        command %(echo "\\$config['base_url'] = '#{site_fqdn}';" >> #{source_dir}/application/config/production/config.php)
         not_if "grep -q #{site_fqdn} #{source_dir}/application/config/production/config.php"
       end
       execute "chcon -R system_u:object_r:httpd_sys_content_t:s0 #{source_dir}" do

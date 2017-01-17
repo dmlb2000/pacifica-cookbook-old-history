@@ -81,7 +81,7 @@ module PacificaCookbook
 	allow varnishlog_t varnishd_var_lib_t:lnk_file read;
         eos
         only_if { rhel? }
-	action :deploy
+        action :deploy
       end
       execute 'restorecon /var/log/varnish/*' do
         only_if { rhel? }
