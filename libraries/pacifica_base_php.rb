@@ -44,8 +44,10 @@ module PacificaCookbook
       end
       directory "#{source_dir}/application/logs"
       apache_user = if rhel?
+	              package 'httpd'
                       'apache'
                     else
+	              package 'apache2'
                       'www-data'
                     end
       execute "chown -R #{apache_user}:#{apache_user} #{source_dir}"
