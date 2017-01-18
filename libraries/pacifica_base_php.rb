@@ -50,7 +50,7 @@ module PacificaCookbook
                     end
       execute "chown -R #{apache_user}:#{apache_user} #{source_dir}"
       execute 'create_site_fqdn' do
-        command %Q(echo "\\$config['base_url'] = '#{site_fqdn}';" >> #{source_dir}/application/config/production/config.php)
+        command %(echo "\\$config['base_url'] = '#{site_fqdn}';" >> #{source_dir}/application/config/production/config.php)
         not_if "grep -q #{site_fqdn} #{source_dir}/application/config/production/config.php"
       end
       execute "chcon -R system_u:object_r:httpd_sys_content_t:s0 #{source_dir}" do
@@ -65,7 +65,7 @@ module PacificaCookbook
         max_children: node['cpu']['total'] * 4,
         start_servers: node['cpu']['total'],
         min_spare_servers: node['cpu']['total'],
-        max_spare_servers: node['cpu']['total'],
+        max_spare_servers: node['cpu']['total']
       }
       ipaddress, listen_port = if php_fpm_opts.key?(:listen)
                                  php_fpm_opts[:listen].split(':')
@@ -85,7 +85,7 @@ module PacificaCookbook
         listen "/var/run/php5-fpm-#{name}.sock"
         chdir source_dir
         max_children
-        notifies :restart, "service[php-fpm]"
+        notifies :restart, 'service[php-fpm]'
         default_attrs.merge(php_fpm_opts).each do |attr, value|
           send(attr, value)
         end
