@@ -1,0 +1,23 @@
+AllCops:
+  Exclude:
+    - .kitchen.yml
+
+AlignParameters:
+  Enabled: false
+Encoding:
+  Enabled: false
+HashSyntax:
+  Enabled: false
+LineLength:
+  Enabled: false
+MethodLength:
+  Max: 60
+NumericLiterals:
+  Enabled: false
+SpaceBeforeFirstArg:
+  Enabled: false
+FileName:
+  Enabled: false
+RegexpLiteral:
+  Exclude:
+    - 'spec/unit/recipes/*'
