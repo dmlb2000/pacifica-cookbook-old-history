@@ -1,4 +1,4 @@
-ource 'https://rubygems.org'
+source 'https://rubygems.org'
 
 group :docker do
   gem 'docker-api', '= 1.31.0'
@@ -10,8 +10,8 @@ group :rake do
 end
 
 group :lint do
-  gem 'foodcritic', '~> 8.0'
   gem 'cookstyle'
+  gem 'foodcritic', '~> 8.0'
 end
 
 group :unit do
@@ -21,9 +21,9 @@ group :unit do
 end
 
 group :kitchen_common do
-  gem 'test-kitchen', '~> 1.13'
-  gem 'kitchen-sync'
   gem 'kitchen-inspec'
+  gem 'kitchen-sync'
+  gem 'test-kitchen', '~> 1.13'
 end
 
 group :kitchen_vagrant do
