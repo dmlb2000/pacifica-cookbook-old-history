@@ -19,9 +19,13 @@ Check out [How Cookbooks are Maintained](https://github.com/chef-cookbooks/commu
       lieutenant = 'dmlb2000'
 
       maintainers = [
+      'gitbytes'
       ]
 
 [people]
   [people.dmlb2000]
     name = "David Brown"
     github = "dmlb2000"
+  [people.gitbytes]
+    name = "Ian Smith"
+    github = "gitbytes"
