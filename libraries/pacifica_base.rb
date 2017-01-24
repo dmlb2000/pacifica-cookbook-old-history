@@ -108,7 +108,7 @@ END_HEREDOC
       end
       systemd_service name do
         description "start #{name} in python"
-        after %w( network.target )
+        after %w(network.target)
         install do
           wanted_by 'multi-user.target'
         end

@@ -5,12 +5,12 @@ module PacificaCookbook
   class PacificaCartFrontend < PacificaBase
     property :name, String, name_property: true
     property :git_opts, Hash, default: {
-      repository: 'https://github.com/EMSL-MSC/pacifica-cartd.git',
+      repository: 'https://github.com/EMSL-MSC/pacifica-cartd.git'
     }
     property :directory_opts, Hash, default: lazy {
       {
         path: "#{prefix_dir}/cartdata",
-        recursive: true,
+        recursive: true
       }
     }
     property :service_opts, Hash, default: lazy {
@@ -19,8 +19,8 @@ module PacificaCookbook
           VOLUME_PATH: "#{prefix_dir}/cartdata/",
           LRU_BUFFER_TIME: 0,
           MYSQL_ENV_MYSQL_PASSWORD: 'cart',
-          MYSQL_ENV_MYSQL_USER: 'cart',
-        },
+          MYSQL_ENV_MYSQL_USER: 'cart'
+        }
       }
     }
     property :wsgi_file, String, default: 'cartserver.py'
