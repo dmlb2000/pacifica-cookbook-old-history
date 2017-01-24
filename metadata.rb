@@ -1,7 +1,7 @@
 name 'pacifica'
 maintainer 'David Brown'
 maintainer_email 'dmlb2000@gmail.com'
-license 'all_rights'
+license 'Apache v2.0'
 description 'Installs/Configures pacifica'
 long_description 'Installs/Configures pacifica'
 version '0.1.0'

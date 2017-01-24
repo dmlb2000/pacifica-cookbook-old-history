@@ -1,7 +1,7 @@
 name 'test'
 maintainer 'David Brown'
 maintainer_email 'dmlb2000@gmail.com'
-license 'all_rights'
+license 'Apache v2.0'
 description 'Installs/Configures pacifica'
 long_description 'Installs/Configures pacifica'
 if respond_to?(:issues_url)
