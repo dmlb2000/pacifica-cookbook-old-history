@@ -24,7 +24,7 @@ module PacificaCookbook
       }
     }
     property :wsgi_file, String, default: 'IngestServer.py'
-    property :port, String, default: 8066
+    property :port, Integer, default: 8066
     resource_name :pacifica_ingestfrontend
   end
 end
