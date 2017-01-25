@@ -14,6 +14,7 @@ module PacificaCookbook
           VOLUME_PATH: "#{prefix_dir}/ingestdata",
           MYSQL_ENV_MYSQL_PASSWORD: 'ingest',
           MYSQL_ENV_MYSQL_USER: 'ingest',
+          BROKER_VHOST: '/ingest',
         },
       }
     }

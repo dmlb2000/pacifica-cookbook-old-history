@@ -20,6 +20,7 @@ module PacificaCookbook
           MYSQL_ENV_MYSQL_DATABASE: 'ingest',
           MYSQL_ENV_MYSQL_PASSWORD: 'ingest',
           MYSQL_ENV_MYSQL_USER: 'ingest',
+          BROKER_VHOST: '/ingest',
         },
       }
     }
