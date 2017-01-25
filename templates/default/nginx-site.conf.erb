@@ -1,7 +1,7 @@
 upstream <%= @name %> {
-<%- @backend_hosts.each do |host| %>
+<% @backend_hosts.each do |host| %>
   server <%= host %>;
-<%- end %>
+<% end %>
 }
 server {
   listen       <%= @listen_port %>;
