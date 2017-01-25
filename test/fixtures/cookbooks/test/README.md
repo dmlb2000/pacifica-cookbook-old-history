@@ -1,2 +1,1 @@
-Test Fixture for the Pacifica Cookbook
-======================================
+# Test Fixture for the Pacifica Cookbook
