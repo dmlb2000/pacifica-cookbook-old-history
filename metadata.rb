@@ -12,6 +12,12 @@ if respond_to?(:source_url)
 end
 version '0.1.0'
 
+chef_version '>= 12'
+
+supports 'ubuntu', '>= 14.04'
+supports 'centos', '>= 7.0'
+supports 'redhat', '>= 7.0'
+
 depends 'git'
 depends 'poise-python'
 depends 'systemd'
