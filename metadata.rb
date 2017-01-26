@@ -18,6 +18,7 @@ supports 'ubuntu', '>= 14.04'
 supports 'centos', '>= 7.0'
 supports 'redhat', '>= 7.0'
 
+depends 'apache2'
 depends 'git'
 depends 'poise-python'
 depends 'systemd'
