@@ -10,8 +10,18 @@ for deployment in a chef managed environment.
 
  - docker
 
+### Other Notes
+This cookbook does not provide the following services, nor does it offer the means to configure by default:
+* postgresql
+* mysql
+* elasticsearch
+* httpd/apache2
+* rabbit
+* java
+
+These services will need to be configured to taste before utilizing the custom resources this cookbook provides.
+
 ## Configuration
 
 The attributes should give you an idea of what ports are where and how
 to change the configuration.
-
