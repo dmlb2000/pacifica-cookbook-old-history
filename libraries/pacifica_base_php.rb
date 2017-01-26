@@ -1,7 +1,9 @@
 # pacifica cookbook module
 module PacificaCookbook
+  require_relative 'helpers_base_dir'
   # Pacifica base class with common properties and actions
   class PacificaBasePhp < ChefCompat::Resource
+    include PacificaHelpers::BaseDirectories
     ################
     # Properties
     ################
@@ -12,13 +14,13 @@ module PacificaCookbook
     property :git_client_opts, Hash, default: {}
     property :php_fpm_opts, Hash, default: {}
 
-    def prefix_dir
-      "#{prefix}/#{name}"
-    end
-
-    def source_dir
-      "#{prefix_dir}/source"
-    end
+    # def prefix_dir
+    #   "#{prefix}/#{name}"
+    # end
+    #
+    # def source_dir
+    #   "#{prefix_dir}/source"
+    # end
 
     default_action :create
 
