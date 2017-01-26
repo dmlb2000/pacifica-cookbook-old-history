@@ -1,20 +1,23 @@
 include_recipe 'postgresql::ruby'
 include_recipe 'postgresql::server'
-
 include_recipe 'yum-mysql-community::mysql56'
+
 mysql2_chef_gem 'default' do
+  # Bug in upstream cookbook, need to migrate to standard mysql cookbook
   provider Chef::Provider::Mysql2ChefGem::Mysql
+  # Chef::Provider::Mysql2ChefGem does not declare 'provides :mysql2_chef_gem'.
+  action :install
 end
+
 mysql_service 'default' do
   initial_root_password 'mysql'
-  action [:create]
+  action [:create, :start]
 end
+
 execute 'chcon -R system_u:object_r:mysqld_db_t:s0 /var/lib/mysql-default' do
   only_if { rhel? }
-end
-mysql_service 'default' do
-  initial_root_password 'mysql'
-  action [:start]
+  action :run
+  notifies :restart, 'mysql_service[default]'
 end
 
 postgresql_connection_info = {
@@ -54,6 +57,7 @@ mysql_connection_info = {
     end
   end
 end
+
 {
   uniqueid: {
     password: 'uniqueid',
