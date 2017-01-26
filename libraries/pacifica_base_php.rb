@@ -11,14 +11,6 @@ module PacificaCookbook
     property :git_client_opts, Hash, default: {}
     property :php_fpm_opts, Hash, default: {}
 
-    # def prefix_dir
-    #   "#{prefix}/#{name}"
-    # end
-    #
-    # def source_dir
-    #   "#{prefix_dir}/source"
-    # end
-
     default_action :create
 
     action :create do
