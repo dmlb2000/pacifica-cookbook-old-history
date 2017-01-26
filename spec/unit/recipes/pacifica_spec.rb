@@ -12,8 +12,8 @@ describe 'test::pacifica' do
     stub_command(%r{/ls \/.*\/config.php/}).and_return(false)
     stub_command('grep -q http://127.0.0.1 /opt/status/source/application/config/production/config.php').and_return(true)
     stub_command('grep -q http://127.0.0.1 /opt/reporting/source/application/config/production/config.php').and_return(true)
-    stub_command("/usr/sbin/apache2 -t").and_return(true)
-    stub_command("/usr/sbin/httpd -t").and_return(true)
+    stub_command('/usr/sbin/apache2 -t').and_return(true)
+    stub_command('/usr/sbin/httpd -t').and_return(true)
   end
   supported_platforms.each do |platform, versions|
     versions.each do |version|
