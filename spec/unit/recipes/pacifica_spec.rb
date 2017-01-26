@@ -9,6 +9,9 @@ require 'spec_helper'
 describe 'test::pacifica' do
   before do
     allow_any_instance_of(Chef::Recipe).to receive(:include_recipe).and_call_original
+    stub_command(/ls \/.*\/config.php/).and_return(false)
+    stub_command("grep -q http://127.0.0.1 /opt/status/source/application/config/production/config.php").and_return(true)
+    stub_command("grep -q http://127.0.0.1 /opt/reporting/source/application/config/production/config.php").and_return(true)
   end
   supported_platforms.each do |platform, versions|
     versions.each do |version|
