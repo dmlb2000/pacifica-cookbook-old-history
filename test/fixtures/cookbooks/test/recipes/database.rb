@@ -9,15 +9,22 @@ mysql2_chef_gem 'default' do
   action :install
 end
 
-mysql_service 'default' do
+mysql_service 'default_create' do
+  instance 'default'
   initial_root_password 'mysql'
-  action [:create, :start]
+  action [:create]
 end
 
-execute 'chcon -R system_u:object_r:mysqld_db_t:s0 /var/lib/mysql-default' do
-  only_if { rhel? }
+execute 'chcon_mysql_default' do
+  command 'chcon -R system_u:object_r:mysqld_db_t:s0 /var/lib/mysql-default'
   action :run
-  notifies :restart, 'mysql_service[default]'
+  only_if { rhel? }
+end
+
+mysql_service 'default_start' do
+  instance 'default'
+  initial_root_password 'mysql'
+  action [:start]
 end
 
 postgresql_connection_info = {
