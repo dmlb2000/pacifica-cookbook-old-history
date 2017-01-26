@@ -3,6 +3,7 @@ module PacificaCookbook
   require_relative 'helpers_base_dir'
   # Pacifica base class with common properties and actions
   class PacificaBasePhp < ChefCompat::Resource
+    property :name, String, name_property: true
     property :prefix, String, default: '/opt'
     property :directory_opts, Hash, default: {}
     property :site_fqdn, String, default: 'http://127.0.0.1'
