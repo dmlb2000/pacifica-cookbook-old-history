@@ -5,9 +5,6 @@ module PacificaCookbook
   require_relative 'helpers_base'
   # Pacifica base class with common properties and actions
   class PacificaBase < ChefCompat::Resource
-    ################
-    # Properties
-    ################
     include PacificaHelpers::BaseDirectories
     property :prefix, String, default: '/opt'
     property :directory_opts, Hash, default: {}
@@ -27,10 +24,6 @@ module PacificaCookbook
       "--master -p #{node['cpu']['total']} "\
       "--wsgi-file #{source_dir}/#{wsgi_file}"
     }
-
-    ##################
-    # Helper Methods
-    ##################
     def prefix_dir
       "#{prefix}/#{name}"
     end
