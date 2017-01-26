@@ -3,13 +3,13 @@ require 'digest'
 module PacificaCookbook
   # Manages the Pacifica nginx service
   class PacificaNginx < ChefCompat::Resource
+    resource_name :pacifica_nginx
+
     property :name, String, name_property: true
     property :backend_hosts, Array, default: []
     property :listen_port, Integer, default: 9000
     property :nginx_opts, Hash, default: {}
     property :nginx_site_opts, Hash, default: {}
-
-    resource_name :pacifica_nginx
 
     default_action :create
 

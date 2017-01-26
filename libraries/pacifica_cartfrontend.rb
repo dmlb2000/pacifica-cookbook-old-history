@@ -3,6 +3,8 @@ module PacificaCookbook
   require_relative 'pacifica_base'
   # installs and configures pacifica cart frontend wsgi
   class PacificaCartFrontend < PacificaBase
+    resource_name :pacifica_cartfrontend
+
     property :name, String, name_property: true
     property :git_opts, Hash, default: {
       repository: 'https://github.com/EMSL-MSC/pacifica-cartd.git',
@@ -26,6 +28,5 @@ module PacificaCookbook
     }
     property :wsgi_file, String, default: 'cartserver.py'
     property :port, Integer, default: 8081
-    resource_name :pacifica_cartfrontend
   end
 end

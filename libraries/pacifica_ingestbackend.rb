@@ -3,6 +3,8 @@ module PacificaCookbook
   require_relative 'pacifica_base'
   # installs and configures pacifica ingest backend celery
   class PacificaIngestBackend < PacificaBase
+    resource_name :pacifica_ingestbackend
+
     property :name, String, name_property: true
     property :git_opts, Hash, default: {
       repository: 'https://github.com/EMSL-MSC/pacifica-ingest.git',
@@ -21,6 +23,5 @@ module PacificaCookbook
     property :run_command, String, default: lazy {
       "#{virtualenv_dir}/bin/python -m celery -A ingest.backend worker -l info"
     }
-    resource_name :pacifica_ingestbackend
   end
 end

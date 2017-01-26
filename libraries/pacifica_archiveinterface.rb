@@ -3,6 +3,8 @@ module PacificaCookbook
   require_relative 'pacifica_base'
   # Manages the Pacifica archive interface service
   class PacificaArchiveInterface < PacificaBase
+    resource_name :pacifica_archiveinterface
+
     property :name, String, name_property: true
     property :git_opts, Hash, default: {
       repository: 'https://github.com/EMSL-MSC/pacifica-archiveinterface.git',
@@ -21,6 +23,5 @@ EOF
     }
     property :wsgi_file, String, default: 'archiveinterface/wsgi.py'
     property :port, Integer, default: 8080
-    resource_name :pacifica_archiveinterface
   end
 end

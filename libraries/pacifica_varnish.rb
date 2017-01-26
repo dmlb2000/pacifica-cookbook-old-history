@@ -3,6 +3,8 @@ require 'digest'
 module PacificaCookbook
   # Manages the Pacifica varnish service
   class PacificaVarnish < ChefCompat::Resource
+    resource_name :pacifica_varnish
+
     property :name, String, name_property: true
     property :backend_hosts, Array, default: []
     property :listen_port, Integer, default: 6081
@@ -18,8 +20,6 @@ module PacificaCookbook
       end
       ret
     end
-
-    resource_name :pacifica_varnish
 
     default_action :create
 

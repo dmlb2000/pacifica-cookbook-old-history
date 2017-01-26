@@ -3,6 +3,8 @@ module PacificaCookbook
   require_relative 'pacifica_base'
   # installs and configures pacifica cart backend celery
   class PacificaCartBackend < PacificaBase
+    resource_name :pacifica_cartbackend
+
     property :name, String, name_property: true
     property :git_opts, Hash, default: {
       repository: 'https://github.com/EMSL-MSC/pacifica-cartd.git',
@@ -22,6 +24,5 @@ module PacificaCookbook
     property :run_command, String, default: lazy {
       "#{virtualenv_dir}/bin/python -m celery -A cart worker -l info"
     }
-    resource_name :pacifica_cartbackend
   end
 end
