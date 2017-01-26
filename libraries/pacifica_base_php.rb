@@ -3,7 +3,6 @@ module PacificaCookbook
   require_relative 'helpers_base_dir'
   # Pacifica base class with common properties and actions
   class PacificaBasePhp < ChefCompat::Resource
-    include PacificaHelpers::BaseDirectories
     property :prefix, String, default: '/opt'
     property :site_fqdn, String, default: 'http://127.0.0.1'
     property :directory_opts, Hash, default: {}
@@ -14,6 +13,7 @@ module PacificaCookbook
     default_action :create
 
     action :create do
+      extend PacificaHelpers::BaseDirectories
       require 'ipaddress'
       include_recipe 'chef-sugar'
       include_recipe 'selinux_policy::install' if rhel?
