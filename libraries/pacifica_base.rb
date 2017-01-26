@@ -1,10 +1,14 @@
 # This is the primary shared library for Pacifica custom resources
 module PacificaCookbook
+  require_relative 'helpers_base_dir'
+  require_relative 'helpers_base_python'
+  require_relative 'helpers_base'
   # Pacifica base class with common properties and actions
   class PacificaBase < ChefCompat::Resource
     ################
     # Properties
     ################
+    include PacificaHelpers::BaseDirectories
     property :prefix, String, default: '/opt'
     property :directory_opts, Hash, default: {}
     property :virtualenv_opts, Hash, default: {}
