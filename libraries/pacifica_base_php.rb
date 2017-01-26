@@ -69,7 +69,7 @@ module PacificaCookbook
         max_children: node['cpu']['total'] * 4,
         start_servers: node['cpu']['total'],
         min_spare_servers: node['cpu']['total'],
-        max_spare_servers: node['cpu']['total']
+        max_spare_servers: node['cpu']['total'],
       }
       ipaddress, listen_port = if php_fpm_opts.key?(:listen)
                                  php_fpm_opts[:listen].split(':')

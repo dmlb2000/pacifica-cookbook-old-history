@@ -24,32 +24,32 @@ postgresql_connection_info = {
   host: '127.0.0.1',
   port: node['postgresql']['config']['port'],
   username: 'postgres',
-  password: 'postgres'
+  password: 'postgres',
 }
 mysql_connection_info = {
   host: '127.0.0.1',
   socket: '/var/run/mysql-default/mysqld.sock',
   username: 'root',
-  password: 'mysql'
+  password: 'mysql',
 }
 
 {
   uniqueid: {
     provider: Chef::Provider::Database::Mysql,
-    connection: mysql_connection_info
+    connection: mysql_connection_info,
   },
   ingest: {
     provider: Chef::Provider::Database::Mysql,
-    connection: mysql_connection_info
+    connection: mysql_connection_info,
   },
   cartd: {
     provider: Chef::Provider::Database::Mysql,
-    connection: mysql_connection_info
+    connection: mysql_connection_info,
   },
   metadata: {
     provider: Chef::Provider::Database::Postgresql,
-    connection: postgresql_connection_info
-  }
+    connection: postgresql_connection_info,
+  },
 }.each do |dbname, data|
   database dbname.to_s do
     data.each do |attr, value|
@@ -65,7 +65,7 @@ end
     host: '127.0.0.1',
     database_name: 'uniqueid',
     action: [:grant],
-    provider: Chef::Provider::Database::MysqlUser
+    provider: Chef::Provider::Database::MysqlUser,
   },
   cart: {
     password: 'cart',
@@ -73,7 +73,7 @@ end
     host: '127.0.0.1',
     database_name: 'cartd',
     action: [:grant],
-    provider: Chef::Provider::Database::MysqlUser
+    provider: Chef::Provider::Database::MysqlUser,
   },
   ingest: {
     password: 'ingest',
@@ -81,15 +81,15 @@ end
     host: '127.0.0.1',
     database_name: 'ingest',
     action: [:grant],
-    provider: Chef::Provider::Database::MysqlUser
+    provider: Chef::Provider::Database::MysqlUser,
   },
   metadata: {
     password: 'metadata',
     database_name: 'metadata',
     provider: Chef::Provider::Database::PostgresqlUser,
     connection: postgresql_connection_info,
-    action: [:create, :grant]
-  }
+    action: [:create, :grant],
+  },
 }.each do |user, data|
   database_user user.to_s do
     data.each do |attr, value|

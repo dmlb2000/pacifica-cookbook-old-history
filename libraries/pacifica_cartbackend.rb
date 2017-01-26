@@ -5,7 +5,7 @@ module PacificaCookbook
   class PacificaCartBackend < PacificaBase
     property :name, String, name_property: true
     property :git_opts, Hash, default: {
-      repository: 'https://github.com/EMSL-MSC/pacifica-cartd.git'
+      repository: 'https://github.com/EMSL-MSC/pacifica-cartd.git',
     }
     property :service_opts, Hash, default: lazy {
       {
@@ -15,8 +15,8 @@ module PacificaCookbook
           LRU_BUFFER_TIME: 0,
           MYSQL_ENV_MYSQL_PASSWORD: 'cart',
           MYSQL_ENV_MYSQL_USER: 'cart',
-          AMQP_VHOST: '/cart'
-        }
+          AMQP_VHOST: '/cart',
+        },
       }
     }
     property :run_command, String, default: lazy {

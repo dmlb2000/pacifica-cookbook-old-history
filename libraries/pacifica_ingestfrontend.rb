@@ -5,12 +5,12 @@ module PacificaCookbook
   class PacificaIngestFrontend < PacificaBase
     property :name, String, name_property: true
     property :git_opts, Hash, default: {
-      repository: 'https://github.com/EMSL-MSC/pacifica-ingest.git'
+      repository: 'https://github.com/EMSL-MSC/pacifica-ingest.git',
     }
     property :directory_opts, Hash, default: lazy {
       {
         path: "#{prefix_dir}/ingestdata",
-        recursive: true
+        recursive: true,
       }
     }
     property :service_opts, Hash, default: lazy {
@@ -20,8 +20,8 @@ module PacificaCookbook
           MYSQL_ENV_MYSQL_DATABASE: 'ingest',
           MYSQL_ENV_MYSQL_PASSWORD: 'ingest',
           MYSQL_ENV_MYSQL_USER: 'ingest',
-          BROKER_VHOST: '/ingest'
-        }
+          BROKER_VHOST: '/ingest',
+        },
       }
     }
     property :wsgi_file, String, default: 'IngestServer.py'

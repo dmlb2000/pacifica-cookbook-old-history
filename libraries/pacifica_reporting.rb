@@ -5,7 +5,7 @@ module PacificaCookbook
   class PacificaReporting < PacificaBasePhp
     property :name, String, name_property: true
     property :git_opts, Hash, default: {
-      repository: 'https://github.com/EMSL-MSC/pacifica-reporting.git'
+      repository: 'https://github.com/EMSL-MSC/pacifica-reporting.git',
     }
     resource_name :pacifica_reporting
   end
