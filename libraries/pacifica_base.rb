@@ -24,18 +24,6 @@ module PacificaCookbook
       "--master -p #{node['cpu']['total']} "\
       "--wsgi-file #{source_dir}/#{wsgi_file}"
     }
-    def prefix_dir
-      "#{prefix}/#{name}"
-    end
-
-    def virtualenv_dir
-      "#{prefix_dir}/virtualenv"
-    end
-
-    def source_dir
-      "#{prefix_dir}/source"
-    end
-
     default_action :create
 
     action :create do
