@@ -14,7 +14,8 @@ module PacificaCookbook
           VOLUME_PATH: "#{prefix_dir}/cartdata/",
           LRU_BUFFER_TIME: 0,
           MYSQL_ENV_MYSQL_PASSWORD: 'cart',
-          MYSQL_ENV_MYSQL_USER: 'cart'
+          MYSQL_ENV_MYSQL_USER: 'cart',
+          AMQP_VHOST: '/cart'
         }
       }
     }

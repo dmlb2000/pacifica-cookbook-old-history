@@ -13,7 +13,8 @@ module PacificaCookbook
           PYTHONPATH: "#{virtualenv_dir}/lib/python2.7/site-packages",
           VOLUME_PATH: "#{prefix_dir}/ingestdata",
           MYSQL_ENV_MYSQL_PASSWORD: 'ingest',
-          MYSQL_ENV_MYSQL_USER: 'ingest'
+          MYSQL_ENV_MYSQL_USER: 'ingest',
+          BROKER_VHOST: '/ingest'
         }
       }
     }
