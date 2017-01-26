@@ -6,6 +6,7 @@ module PacificaCookbook
   # Pacifica base class with common properties and actions
   class PacificaBase < ChefCompat::Resource
     include PacificaHelpers::BaseDirectories
+    property :name, String, name_property: true
     property :prefix, String, default: '/opt'
     property :directory_opts, Hash, default: {}
     property :virtualenv_opts, Hash, default: {}
