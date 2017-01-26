@@ -1,3 +1,4 @@
+# This is the primary shared library for Pacifica custom resources
 module PacificaCookbook
   # Pacifica base class with common properties and actions
   class PacificaBase < ChefCompat::Resource
