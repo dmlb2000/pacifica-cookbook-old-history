@@ -15,9 +15,11 @@ This cookbook does not provide the following services, nor does it offer the mea
 * postgresql
 * mysql
 * elasticsearch
-* httpd/apache2
 * rabbit
 * java
+
+There is minimal configuration provided for:
+* apache2/httpd
 
 These services will need to be configured to taste before utilizing the custom resources this cookbook provides.
 
