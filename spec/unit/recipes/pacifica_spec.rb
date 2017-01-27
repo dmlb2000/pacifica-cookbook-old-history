@@ -7,7 +7,7 @@
 require 'spec_helper'
 
 describe 'test::pacifica' do
-  custom_resource = {
+  base_resource = {
     pacifica_archiveinterface: 'archiveinterface',
     pacifica_cartfrontend: 'cartwsgi',
     pacifica_cartbackend: 'cartd',
@@ -16,12 +16,14 @@ describe 'test::pacifica' do
     pacifica_uniqueid: 'uniqueid',
     pacifica_ingestbackend: 'ingestd',
     pacifica_ingestfrontend: 'ingestwsgi',
-    pacifica_status: 'status',
-    pacifica_reporting: 'reporting',
     pacifica_nginx: 'nginxai',
     pacifica_varnish: 'varnishai',
   }
-
+  base_php_resource = {
+    pacifica_status: 'status',
+    pacifica_reporting: 'reporting',
+  }
+  merged_base = base_resource.merge(base_php_resource)
   before do
     allow_any_instance_of(Chef::Recipe).to receive(:include_recipe).and_call_original
     stub_command(%r{/ls \/.*\/config.php/}).and_return(false)
@@ -35,45 +37,45 @@ describe 'test::pacifica' do
       context "on an #{platform.capitalize}-#{version} box" do
         let(:chef_run) do
           runner = ChefSpec::ServerRunner.new(
-            platform: platform, version: version, step_into: custom_resource.keys
+            platform: platform, version: version, step_into: merged_base.keys
           )
           runner.converge(described_recipe)
         end
 
-        custom_resource.each do |resource_key, resource_value|
-          it "#{resource_key} converges successfully" do
+        base_resource.each do |resource_key, resource_value|
+          it "#{resource_key}: Converges successfully" do
             expect { chef_run }.to_not raise_error
           end
 
-          it "installs git client for #{resource_key}" do
+          it "#{resource_key}:  Installs git client" do
             expect(chef_run).to install_git_client(resource_value)
           end
 
-          it "creates directory for #{resource_key}" do
+          it "#{resource_key}:  Creates #{resource_value} directory" do
             expect(chef_run).to create_directory("/opt/#{resource_value}")
           end
 
-          it "syncs git repository for #{resource_key}" do
+          it "#{resource_key}:  Syncs #{resource_value} git repository" do
             expect(chef_run).to sync_git("/opt/#{resource_value}/source")
           end
 
-          it "installs python runtime for #{resource_key}" do
+          it "#{resource_key}:  Installs python runtime" do
             expect(chef_run).to install_python_runtime(resource_value)
           end
 
-          it "creates python virtual environment for #{resource_key}" do
+          it "#{resource_key}:  Creates #{resource_value} python virtual environment" do
             expect(chef_run).to create_python_virtualenv(
               "/opt/#{resource_value}/virtualenv"
             )
           end
 
-          it "installs python requirements for #{resource_key}" do
+          it "#{resource_key}:  Installs python requirements" do
             expect(chef_run).to run_python_execute(
               "#{resource_value}_requirements"
             )
           end
 
-          it "builds python code for #{resource_key}" do
+          it "#{resource_key}:  Builds #{resource_value} python code" do
             allow(File).to receive(:exist?).and_call_original
             allow(File).to receive(:exist?).with(
               "/opt/#{resource_value}/source/setup.py"
@@ -81,8 +83,14 @@ describe 'test::pacifica' do
             expect(chef_run).to run_python_execute("#{resource_value}_build")
           end
 
-          it "creates systemd service for #{resource_key}" do
+          it "#{resource_key}:  Creates #{resource_value} systemd service" do
             expect(chef_run).to create_systemd_service(resource_value)
+          end
+        end
+
+        base_php_resource.each do |resource_key, resource_value|
+          it "#{resource_key}:  Converges successfully" do
+            expect { chef_run }.to_not raise_error
           end
         end
       end
