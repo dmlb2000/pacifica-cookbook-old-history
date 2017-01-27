@@ -43,7 +43,7 @@ describe 'test::pacifica' do
         end
 
         base_resource.each do |resource_key, resource_value|
-          it "#{resource_key}: Converges successfully" do
+          it "#{resource_key}: Converges successfully for #{resource_value}" do
             expect { chef_run }.to_not raise_error
           end
 
@@ -89,7 +89,7 @@ describe 'test::pacifica' do
         end
 
         base_php_resource.each do |resource_key, resource_value|
-          it "#{resource_key}:  Converges successfully" do
+          it "#{resource_key}:  Converges successfully for #{resource_value}" do
             expect { chef_run }.to_not raise_error
           end
         end
