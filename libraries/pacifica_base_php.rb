@@ -44,15 +44,10 @@ module PacificaCookbook
       directory "#{source_dir}/application/logs"
 
       include_recipe 'apache2'
-      apache_user = if rhel?
-                      'apache'
-                    else
-                      'www-data'
-                    end
 
       # ALL the files under #{source_dir} need to be owned by #{apache_user}
       execute "chown_#{name}_files" do
-        command "chown -R #{apache_user}:#{apache_user} #{source_dir}"
+        command "chown -R #{node['apache']['user']}:#{node['apache']['group']} #{source_dir}"
       end
 
       # Doing this because a PHP template is ugly
