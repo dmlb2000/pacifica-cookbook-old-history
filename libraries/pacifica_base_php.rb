@@ -3,6 +3,7 @@ module PacificaCookbook
   require_relative 'helpers_base_dir'
   # Pacifica base class with common properties and actions
   class PacificaBasePhp < ChefCompat::Resource
+    include PacificaHelpers::BaseDirectories
     property :name, String, name_property: true
     property :prefix, String, default: '/opt'
     property :directory_opts, Hash, default: {}
@@ -14,7 +15,6 @@ module PacificaCookbook
     default_action :create
 
     action :create do
-      extend PacificaHelpers::BaseDirectories
       require 'ipaddress'
 
       include_recipe 'chef-sugar'
