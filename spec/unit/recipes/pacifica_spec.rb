@@ -7,6 +7,21 @@
 require 'spec_helper'
 
 describe 'test::pacifica' do
+  custom_resource = {
+    pacifica_archiveinterface: 'archiveinterface',
+    pacifica_cartfrontend: 'cartwsgi',
+    pacifica_cartbackend: 'cartd',
+    pacifica_metadata: 'metadata',
+    pacifica_policy: 'policy',
+    pacifica_uniqueid: 'uniqueid',
+    pacifica_ingestbackend: 'ingestd',
+    pacifica_ingestfrontend: 'ingestwsgi',
+    pacifica_status: 'status',
+    pacifica_reporting: 'reporting',
+    pacifica_nginx: 'nginxai',
+    pacifica_varnish: 'varnishai',
+  }
+
   before do
     allow_any_instance_of(Chef::Recipe).to receive(:include_recipe).and_call_original
     stub_command(%r{/ls \/.*\/config.php/}).and_return(false)
@@ -20,66 +35,55 @@ describe 'test::pacifica' do
       context "on an #{platform.capitalize}-#{version} box" do
         let(:chef_run) do
           runner = ChefSpec::ServerRunner.new(
-            platform: platform, version: version, step_into: %w(
-              pacifica_archiveinterface
-              pacifica_cartbackend
-              pacifica_cartfrontend
-              pacifica_archiveinterface
-              pacifica_ingestfrontend
-              pacifica_metadata
-              pacifica_nginx
-              pacifica_policy
-              pacifica_reporting
-              pacifica_status
-              pacifica_uniqueid
-              pacifica_varnish
-            )
+            platform: platform, version: version, step_into: custom_resource.keys
           )
           runner.converge(described_recipe)
         end
 
-        it 'converges successfully' do
-          expect { chef_run }.to_not raise_error
-        end
+        custom_resource.each do |resource_key, resource_value|
+          it "#{resource_key} converges successfully" do
+            expect { chef_run }.to_not raise_error
+          end
 
-        it 'installs git client' do
-          expect(chef_run).to install_git_client('archiveinterface')
-        end
+          it "installs git client for #{resource_key}" do
+            expect(chef_run).to install_git_client(resource_value)
+          end
 
-        it 'creates directory' do
-          expect(chef_run).to create_directory('/opt/archiveinterface')
-        end
+          it "creates directory for #{resource_key}" do
+            expect(chef_run).to create_directory("/opt/#{resource_value}")
+          end
 
-        it 'syncs git repository' do
-          expect(chef_run).to sync_git('/opt/archiveinterface/source')
-        end
+          it "syncs git repository for #{resource_key}" do
+            expect(chef_run).to sync_git("/opt/#{resource_value}/source")
+          end
 
-        it 'installs python runtime' do
-          expect(chef_run).to install_python_runtime('archiveinterface')
-        end
+          it "installs python runtime for #{resource_key}" do
+            expect(chef_run).to install_python_runtime(resource_value)
+          end
 
-        it 'creates python virtual environment' do
-          expect(chef_run).to create_python_virtualenv(
-            '/opt/archiveinterface/virtualenv'
-          )
-        end
+          it "creates python virtual environment for #{resource_key}" do
+            expect(chef_run).to create_python_virtualenv(
+              "/opt/#{resource_value}/virtualenv"
+            )
+          end
 
-        it 'installs python requirements' do
-          expect(chef_run).to run_python_execute(
-            'archiveinterface_requirements'
-          )
-        end
+          it "installs python requirements for #{resource_key}" do
+            expect(chef_run).to run_python_execute(
+              "#{resource_value}_requirements"
+            )
+          end
 
-        it 'builds python code' do
-          allow(File).to receive(:exist?).and_call_original
-          allow(File).to receive(:exist?).with(
-            '/opt/archiveinterface/source/setup.py'
-          ).and_return(true)
-          expect(chef_run).to run_python_execute('archiveinterface_build')
-        end
+          it "builds python code for #{resource_key}" do
+            allow(File).to receive(:exist?).and_call_original
+            allow(File).to receive(:exist?).with(
+              "/opt/#{resource_value}/source/setup.py"
+            ).and_return(true)
+            expect(chef_run).to run_python_execute("#{resource_value}_build")
+          end
 
-        it 'creates systemd service' do
-          expect(chef_run).to create_systemd_service('archiveinterface')
+          it "creates systemd service for #{resource_key}" do
+            expect(chef_run).to create_systemd_service(resource_value)
+          end
         end
       end
     end
