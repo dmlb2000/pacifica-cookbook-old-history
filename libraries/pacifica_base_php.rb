@@ -11,6 +11,13 @@ module PacificaCookbook
     property :git_opts, Hash, default: {}
     property :git_client_opts, Hash, default: {}
     property :php_fpm_opts, Hash, default: {}
+    property :db_create_opts, Hash, default: lazy {
+      {
+        command: "sh #{source_dir}/db_setup.sh && touch #{prefix_dir}/.dbcreate",
+        not_if: "test -e #{prefix_dir}/.dbcreate",
+        only_if: "test -e #{source_dir}/db_setup.sh",
+      }
+    }
 
     def prefix_dir
       "#{prefix}/#{name}"
@@ -82,6 +89,11 @@ module PacificaCookbook
       selinux_policy_boolean 'httpd_can_network_connect' do
         value true
         only_if { rhel? }
+      end
+      execute "#{name}-db-create" do
+        db_create_opts.each do |attr, value|
+          send(attr, value)
+        end
       end
       php_fpm_pool name do
         listen "/var/run/php5-fpm-#{name}.sock"
