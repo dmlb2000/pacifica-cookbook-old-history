@@ -43,6 +43,14 @@ mysql_connection_info = {
     provider: Chef::Provider::Database::Mysql,
     connection: mysql_connection_info,
   },
+  status: {
+    provider: Chef::Provider::Database::Postgresql,
+    connection: postgresql_connection_info,
+  },
+  reporting: {
+    provider: Chef::Provider::Database::Postgresql,
+    connection: postgresql_connection_info,
+  },
   metadata: {
     provider: Chef::Provider::Database::Postgresql,
     connection: postgresql_connection_info,

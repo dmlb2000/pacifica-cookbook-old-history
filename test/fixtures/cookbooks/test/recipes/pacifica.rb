@@ -6,6 +6,8 @@ pacifica_policy 'policy'
 pacifica_uniqueid 'uniqueid'
 pacifica_ingestbackend 'ingestd'
 pacifica_ingestfrontend 'ingestwsgi'
+pacifica_uploaderbackend 'uploaderd'
+pacifica_uploaderfrontend 'uploaderwsgi'
 pacifica_status 'status'
 pacifica_reporting 'reporting'
 pacifica_nginx 'nginxai' do
