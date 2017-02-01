@@ -41,6 +41,7 @@ module PacificaCookbook
     default_action :create
 
     action :create do
+      include_recipe 'chef-sugar'
       git_client name do
         git_client_opts.each do |attr, value|
           send(attr, value)
