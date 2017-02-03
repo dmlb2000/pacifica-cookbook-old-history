@@ -1,7 +1,6 @@
 # This is the primary shared library for Pacifica custom resources
 module PacificaCookbook
   require_relative 'helpers_base_dir'
-  require_relative 'helpers_base_python'
   require_relative 'helpers_base'
   # Pacifica base class with common properties and actions
   class PacificaBase < ChefCompat::Resource
@@ -28,7 +27,8 @@ module PacificaCookbook
     default_action :create
     action :create do
       extend PacificaCookbook::PacificaHelpers::Base
-      extend PacificaCookbook::PacificaHelpers::BasePython
+      include_recipe 'chef-sugar'
+      base_packages
       base_directory_resources
       base_git_client
       base_git

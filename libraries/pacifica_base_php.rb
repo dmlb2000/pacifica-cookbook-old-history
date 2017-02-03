@@ -11,6 +11,18 @@ module PacificaCookbook
     property :git_opts, Hash, default: {}
     property :git_client_opts, Hash, default: {}
     property :php_fpm_opts, Hash, default: {}
+    property :ci_prod_template_opts, Hash, default: {}
+    property :ci_prod_template_vars, Hash, default: {
+      base_url: 'http://127.0.0.1',
+      db_host: '',
+      db_user: '',
+      db_pass: '',
+      db_name: 'database.db',
+      db_driver: 'sqlite',
+      cache_on: 'TRUE',
+      cache_dir: '/tmp',
+      timezone: 'UTC',
+    }
 
     default_action :create
 
@@ -56,6 +68,16 @@ module PacificaCookbook
         not_if "grep -q #{site_fqdn} #{source_dir}/application/config/production/config.php"
       end
 
+      template 'create_prod_config' do
+        source 'ci-prod-config.php.erb'
+        path "#{source_dir}/application/config/production/config.php"
+        ci_prod_template_opts.each do |attr, value|
+          send(attr, value)
+        end
+        cookbook 'pacifica'
+        variables(ci_prod_template_vars)
+      end
+
       # Prep the git clone selinux context
       execute "set_#{name}_selinux_context" do
         command "chcon -R system_u:object_r:httpd_sys_content_t:s0 #{source_dir}"
@@ -80,6 +102,7 @@ module PacificaCookbook
                                else
                                  %w(127.0.0.1 9000)
                                end
+
       # Set SELinux Policy Port
       selinux_policy_port "#{name}_#{listen_port}" do
         port listen_port
