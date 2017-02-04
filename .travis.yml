@@ -20,7 +20,10 @@ script:
   - /opt/chefdk/embedded/bin/foodcritic --version
   - /opt/chefdk/embedded/bin/foodcritic .
   - /opt/chefdk/embedded/bin/rspec --version
-  - /opt/chefdk/embedded/bin/rspec
+  - /opt/chefdk/embedded/bin/rspec spec/unit/recipes/pacifica_base_php_spec.rb
+  - /opt/chefdk/embedded/bin/rspec spec/unit/recipes/pacifica_base_spec.rb
+  - /opt/chefdk/embedded/bin/rspec spec/unit/recipes/pacifica_nginx_spec.rb
+  - /opt/chefdk/embedded/bin/rspec spec/unit/recipes/pacifica_varnish_spec.rb
 
 notifications:
   email:
