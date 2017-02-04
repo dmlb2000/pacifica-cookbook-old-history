@@ -6,10 +6,12 @@ module PacificaCookbook
     module Base
       # Create prefixed directories
       def base_packages
-        if rhel?
-          package 'sqlite-devel'
-        else
-          package %w(sqlite3 sqlite3-doc libsqlite3-dev)
+        package "#{name}_packages" do
+          if rhel?
+            package_name 'sqlite-devel'
+          elsif debian?
+            package_name %w(sqlite3 sqlite3-doc libsqlite3-dev)
+          end
         end
       end
 
