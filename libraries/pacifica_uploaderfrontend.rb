@@ -22,7 +22,7 @@ module PacificaCookbook
       }
     }
     property :wsgi_file, String, default: 'UploadServer/wsgi.py'
-    property :port, String, default: 8000
+    property :port, Integer, default: 8000
     resource_name :pacifica_uploaderfrontend
   end
 end
