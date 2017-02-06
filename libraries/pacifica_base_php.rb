@@ -1,6 +1,7 @@
 # pacifica cookbook module
 module PacificaCookbook
   require_relative 'helpers_base_dir'
+  require_relative 'helpers_base'
   # Pacifica base class with common properties and actions
   class PacificaBasePhp < ChefCompat::Resource
     include PacificaHelpers::BaseDirectories
@@ -27,13 +28,14 @@ module PacificaCookbook
     default_action :create
 
     action :create do
+      extend PacificaCookbook::PacificaHelpers::Base
       require 'ipaddress'
 
       include_recipe 'chef-sugar'
       include_recipe 'selinux_policy::install' if rhel?
 
       # Install the git_client
-      git_client "#{name}_client" do
+      git_client name.to_s do
         git_client_opts.each do |attr, value|
           send(attr, value)
         end
@@ -64,11 +66,13 @@ module PacificaCookbook
 
       # Doing this because a PHP template is ugly
       execute "create_#{name}_fqdn" do
-        command %(echo "\\$config['base_url'] = '#{site_fqdn}';" >> #{source_dir}/application/config/production/config.php)
+        command <<-HDOC
+echo "\\\\$config['base_url'] = '#{site_fqdn}';" >> #{source_dir}/application/config/production/config.php
+HDOC
         not_if "grep -q #{site_fqdn} #{source_dir}/application/config/production/config.php"
       end
 
-      template 'create_prod_config' do
+      template "#{name}_create_prod_config" do
         source 'ci-prod-config.php.erb'
         path "#{source_dir}/application/config/production/config.php"
         ci_prod_template_opts.each do |attr, value|
