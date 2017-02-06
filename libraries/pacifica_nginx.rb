@@ -42,7 +42,9 @@ module PacificaCookbook
           send(key, attr)
         end
       end
-      package 'nginx'
+      package 'nginx' do
+        options '--force-yes' if debian?
+      end
       template "nginx_#{name}_site_conf" do
         cookbook 'pacifica'
         source 'nginx-site.conf.erb'
