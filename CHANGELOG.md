@@ -2,5 +2,5 @@
 
 ## Pacifica Cookbook
 
-### 0.1.0 (Date TBD)
-* Initial Release - In Development
+### 0.1.1 02-07-2017
+  - Initial Release
