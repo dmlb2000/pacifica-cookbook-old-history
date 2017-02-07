@@ -52,9 +52,9 @@ describe 'test::pacifica_varnish' do
               expect(chef_run).to run_execute('restorecon /var/log/varnish/*')
             end
 
-          it "#{resource_key}:  Configures the varnish repo for #{platform}" do
-            expect(chef_run).to configure_varnish_repo(resource_value)
-          end
+            it "#{resource_key}:  Configures the varnish repo for #{platform}" do
+              expect(chef_run).to configure_varnish_repo(resource_value)
+            end
           end
 
           it "#{resource_key}:  Configures the varnish vcl template" do
