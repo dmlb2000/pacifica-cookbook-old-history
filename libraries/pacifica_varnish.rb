@@ -12,15 +12,6 @@ module PacificaCookbook
     property :config_opts, Hash, default: {}
     property :template_opts, Hash, default: {}
 
-    def vlc_hosts
-      ret = {}
-      backend_hosts.each do |host|
-        unique = Digest.hexencode Digest::MD5.new.digest host
-        ret["host#{unique[0..5]}"] = host
-      end
-      ret
-    end
-
     default_action :create
 
     action :create do
