@@ -51,14 +51,20 @@ describe 'test::pacifica_varnish' do
             it "#{resource_key}:  Runs `restorecon /var/log/varnish/*`" do
               expect(chef_run).to run_execute('restorecon /var/log/varnish/*')
             end
+
+          it "#{resource_key}:  Configures the varnish repo for #{platform}" do
+            expect(chef_run).to configure_varnish_repo(resource_value)
+          end
           end
 
           it "#{resource_key}:  Configures the varnish vcl template" do
             expect(chef_run).to configure_vcl_template('default.vcl')
           end
 
-          it "#{resource_key}:  Configures the varnish repo for #{platform}" do
-            expect(chef_run).to configure_varnish_repo(resource_value)
+          if platform == 'ubuntu'
+            it "#{resource_key}:  Configures the varnish repo for #{platform}" do
+              expect(chef_run).to add_apt_repository('varnish-cache_4.1')
+            end
           end
 
           it "#{resource_key}:  Configures the varnish log" do
