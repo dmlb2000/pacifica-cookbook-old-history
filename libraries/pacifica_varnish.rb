@@ -13,6 +13,9 @@ module PacificaCookbook
     property :repo_opts, Hash, default: {}
     property :config_opts, Hash, default: {}
     property :template_opts, Hash, default: {}
+    # Varnish Repo properties (from varnish cookbook)
+    property :major_version, kind_of: Float, equal_to: [2.1, 3.0, 4.0, 4.1], default: lazy { node['varnish']['major_version'] }
+    property :fetch_gpg_key, kind_of: [TrueClass, FalseClass], default: true
 
     default_action :create
 
@@ -28,9 +31,26 @@ module PacificaCookbook
         value true
         only_if { rhel? }
       end
-      varnish_repo name do
-        repo_opts.each do |key, attr|
-          send(key, attr)
+      # The varnish cookbook upstream does not yet support ubuntu 16.04, hacking a fix here until the fix
+      case node['platform_family']
+      when debian
+        apt_repository "varnish-cache_#{new_resource.major_version}" do
+          uri "http://repo.varnish-cache.org/#{node['platform']}"
+          if node['platform_version'].to_f == '16'
+            distribution 'trusty'
+          else
+            distribution node['lsb']['codename']
+          end
+          components ["varnish-#{new_resource.major_version}"]
+          key "https://repo.varnish-cache.org/#{node['platform']}/GPG-key.txt" if new_resource.fetch_gpg_key
+          deb_src true
+          action :add
+        end
+      else rhel
+        varnish_repo name do
+          repo_opts.each do |key, attr|
+            send(key, attr)
+          end
         end
       end
       package 'varnish'
