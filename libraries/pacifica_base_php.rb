@@ -6,11 +6,22 @@ module PacificaCookbook
     # Properties
     ################
     property :prefix, String, default: '/opt'
-    property :site_fqdn, String, default: 'http://127.0.0.1'
     property :directory_opts, Hash, default: {}
     property :git_opts, Hash, default: {}
     property :git_client_opts, Hash, default: {}
     property :php_fpm_opts, Hash, default: {}
+    property :ci_prod_template_opts, Hash, default: {}
+    property :ci_prod_template_vars, Hash, default: {
+      base_url: 'http://127.0.0.1',
+      db_host: '',
+      db_user: '',
+      db_pass: '',
+      db_name: 'database.db',
+      db_driver: 'sqlite',
+      cache_on: 'TRUE',
+      cache_dir: '/tmp',
+      timezone: 'UTC',
+    }
 
     def prefix_dir
       "#{prefix}/#{name}"
@@ -51,9 +62,14 @@ module PacificaCookbook
                       'www-data'
                     end
       execute "chown -R #{apache_user}:#{apache_user} #{source_dir}"
-      execute 'create_site_fqdn' do
-        command %(echo "\\$config['base_url'] = '#{site_fqdn}';" >> #{source_dir}/application/config/production/config.php)
-        not_if "grep -q #{site_fqdn} #{source_dir}/application/config/production/config.php"
+      template 'create_prod_config' do
+        source 'ci-prod-config.php.erb'
+        path "#{source_dir}/application/config/production/config.php"
+        ci_prod_template_opts.each do |attr, value|
+          send(attr, value)
+        end
+        cookbook 'pacifica'
+        variables(ci_prod_template_vars)
       end
       execute "chcon -R system_u:object_r:httpd_sys_content_t:s0 #{source_dir}" do
         only_if { rhel? }

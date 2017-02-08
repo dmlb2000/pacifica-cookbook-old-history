@@ -1,4 +1,4 @@
-ource 'https://rubygems.org'
+source 'https://rubygems.org'
 
 group :docker do
   gem 'docker-api', '= 1.31.0'

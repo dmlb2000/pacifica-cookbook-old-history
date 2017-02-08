@@ -2,25 +2,23 @@
 module PacificaCookbook
   require_relative 'pacifica_base'
   # installs and configures pacifica ingest backend celery
-  class PacificaIngestBackend < PacificaBase
+  class PacificaUploaderBackend < PacificaBase
     property :name, String, name_property: true
     property :git_opts, Hash, default: {
-      repository: 'https://github.com/EMSL-MSC/pacifica-ingest.git',
+      repository: 'https://github.com/EMSL-MSC/pacifica-uploader.git',
     }
     property :service_opts, Hash, default: lazy {
       {
         environment: {
           PYTHONPATH: "#{virtualenv_dir}/lib/python2.7/site-packages",
-          VOLUME_PATH: "#{prefix_dir}/ingestdata",
-          MYSQL_ENV_MYSQL_PASSWORD: 'ingest',
-          MYSQL_ENV_MYSQL_USER: 'ingest',
-          BROKER_VHOST: '/ingest',
+          VOLUME_PATH: "#{prefix_dir}/uploaderdata",
+          BROKER_VHOST: '/uploader',
         },
       }
     }
     property :run_command, String, default: lazy {
-      "#{virtualenv_dir}/bin/python -m celery -A ingest.backend worker -l info"
+      "#{virtualenv_dir}/bin/python -m celery -A UploadServer worker -l info"
     }
-    resource_name :pacifica_ingestbackend
+    resource_name :pacifica_uploaderbackend
   end
 end

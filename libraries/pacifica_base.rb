@@ -41,10 +41,18 @@ module PacificaCookbook
     default_action :create
 
     action :create do
+      include_recipe 'chef-sugar'
       git_client name do
         git_client_opts.each do |attr, value|
           send(attr, value)
         end
+      end
+      if rhel?
+        package 'sqlite-devel'
+      else
+        package 'sqlite3'
+        package 'sqlite3-doc'
+        package 'libsqlite3-dev'
       end
       directory prefix_dir do
         directory_opts.each do |attr, value|
