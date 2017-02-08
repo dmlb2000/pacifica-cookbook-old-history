@@ -87,7 +87,7 @@ module PacificaCookbook
       }
       default_additional_attrs = {
         'access.log' => "/var/log/php-fpm/#{name}-access.log",
-        'access.format' => '"%t \"%m %r%Q%q\" %s %{mili}dms %{kilo}Mkb %C%%"',
+        'access.format' => '"%R - %u %t \"%m %{REQUEST_URI}e\" %s"',
         'catch_workers_output' => 'yes',
       }
       ipaddress, listen_port = if php_fpm_opts.key?(:listen)
