@@ -108,9 +108,9 @@ module PacificaCookbook
                                  %w(127.0.0.1 9000)
                                end
       if php_fpm_opts.key?(:additional_config)
-        default_additional_attrs.merge(php_fpm_opts[:additional_config])
+        new_hash = default_additional_attrs.merge(php_fpm_opts[:additional_config])
       end
-      php_fpm_opts[:additional_config] = default_additional_attrs
+      php_fpm_opts[:additional_config] = new_hash
       selinux_policy_port listen_port do
         protocol 'tcp'
         secontext 'http_port_t'
