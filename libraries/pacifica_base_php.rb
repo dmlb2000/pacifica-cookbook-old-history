@@ -69,11 +69,20 @@ module PacificaCookbook
         min_spare_servers: node['cpu']['total'],
         max_spare_servers: node['cpu']['total'],
       }
+      default_additional_attrs = {
+        'access.log' => "/var/log/php-fpm/#{name}-access.log",
+        'access.format' => '%t \"%m %r%Q%q\" %s %{mili}dms %{kilo}Mkb %C%%',
+        'catch_workers_output' => 'yes',
+      }
       ipaddress, listen_port = if php_fpm_opts.key?(:listen)
                                  php_fpm_opts[:listen].split(':')
                                else
                                  %w(127.0.0.1 9000)
                                end
+      if php_fpm_opts.key?(:additional_config)
+        default_additional_attrs.merge(php_fpm_opts[:additional_config])
+      end
+      php_fpm_opts[:additional_config] = default_additional_attrs
       selinux_policy_port listen_port do
         protocol 'tcp'
         secontext 'http_port_t'
@@ -86,7 +95,6 @@ module PacificaCookbook
       php_fpm_pool name do
         listen "/var/run/php5-fpm-#{name}.sock"
         chdir source_dir
-        max_children
         notifies :restart, "service[#{node['php']['fpm_service']}]"
         default_attrs.merge(php_fpm_opts).each do |attr, value|
           send(attr, value)
