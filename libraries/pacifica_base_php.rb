@@ -10,9 +10,13 @@ module PacificaCookbook
     property :git_opts, Hash, default: {}
     property :git_client_opts, Hash, default: {}
     property :php_fpm_opts, Hash, default: {}
-    property :ci_prod_template_opts, Hash, default: {}
-    property :ci_prod_template_vars, Hash, default: {
+    property :ci_prod_config_opts, Hash, default: {}
+    property :ci_prod_config_vars, Hash, default: {
       base_url: 'http://127.0.0.1',
+      timezone: 'UTC',
+    }
+    property :ci_prod_database_opts, Hash, default: {}
+    property :ci_prod_database_vars, Hash, default: {
       db_host: '',
       db_user: '',
       db_pass: '',
@@ -20,7 +24,6 @@ module PacificaCookbook
       db_driver: 'sqlite',
       cache_on: 'TRUE',
       cache_dir: '/tmp',
-      timezone: 'UTC',
     }
 
     def prefix_dir
@@ -61,16 +64,25 @@ module PacificaCookbook
                       package 'apache2'
                       'www-data'
                     end
-      execute "chown -R #{apache_user}:#{apache_user} #{source_dir}"
-      template 'create_prod_config' do
-        source 'ci-prod-config.php.erb'
-        path "#{source_dir}/application/config/production/config.php"
-        ci_prod_template_opts.each do |attr, value|
+      template "#{name}_create_prod_database" do
+        source 'ci-prod-database.php.erb'
+        path "#{source_dir}/application/config/production/database.php"
+        cookbook 'pacifica'
+        ci_prod_database_opts.each do |attr, value|
           send(attr, value)
         end
-        cookbook 'pacifica'
-        variables(ci_prod_template_vars)
+        variables(ci_prod_database_vars)
       end
+      template "#{name}_create_prod_config" do
+        source 'ci-prod-config.php.erb'
+        path "#{source_dir}/application/config/production/config.php"
+        cookbook 'pacifica'
+        ci_prod_config_opts.each do |attr, value|
+          send(attr, value)
+        end
+        variables(ci_prod_config_vars)
+      end
+      execute "chown -R #{apache_user}:#{apache_user} #{source_dir}"
       execute "chcon -R system_u:object_r:httpd_sys_content_t:s0 #{source_dir}" do
         only_if { rhel? }
       end
