@@ -117,7 +117,6 @@ module PacificaCookbook
       php_fpm_opts[:additional_config] = new_hash
       # Set SELinux Policy Port
       selinux_policy_port "#{name}_#{listen_port}" do
-      selinux_policy_port listen_port do
         protocol 'tcp'
         secontext 'http_port_t'
         only_if { rhel? && IPAddress.valid?(ipaddress) }
