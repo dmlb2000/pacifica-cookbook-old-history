@@ -2,16 +2,4 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 $config['log_threshold'] = 0;
 $config['base_url'] = "<%= @base_url %>";
-$db['default'] = array(
-  'hostname' => "<%= @db_host %>",
-  'username' => "<%= @db_user %>",
-  'password' => "<%= @db_pass %>",
-  'database' => "<%= @db_name %>",
-  'dbdriver' => "<%= @db_driver %>",
-  'dbprefix' => "",
-  'pconnect' => TRUE,
-  'db_debug' => FALSE,
-  'cache_on' => <%= @cache_on %>,
-  'cachedir' => "<%= @cache_dir %>"
-);
 $config['local_timezone'] = "<%= @timezone %>";

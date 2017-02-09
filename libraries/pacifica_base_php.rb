@@ -12,9 +12,13 @@ module PacificaCookbook
     property :git_opts, Hash, default: {}
     property :git_client_opts, Hash, default: {}
     property :php_fpm_opts, Hash, default: {}
-    property :ci_prod_template_opts, Hash, default: {}
-    property :ci_prod_template_vars, Hash, default: {
+    property :ci_prod_config_opts, Hash, default: {}
+    property :ci_prod_config_vars, Hash, default: {
       base_url: 'http://127.0.0.1',
+      timezone: 'UTC',
+    }
+    property :ci_prod_database_opts, Hash, default: {}
+    property :ci_prod_database_vars, Hash, default: {
       db_host: '',
       db_user: '',
       db_pass: '',
@@ -22,7 +26,6 @@ module PacificaCookbook
       db_driver: 'sqlite',
       cache_on: 'TRUE',
       cache_dir: '/tmp',
-      timezone: 'UTC',
     }
 
     default_action :create
@@ -56,33 +59,29 @@ module PacificaCookbook
       end
 
       directory "#{source_dir}/application/logs"
-
       include_recipe 'apache2'
-
+      template "#{name}_create_prod_database" do
+        source 'ci-prod-database.php.erb'
+        path "#{source_dir}/application/config/production/database.php"
+        cookbook 'pacifica'
+        ci_prod_database_opts.each do |attr, value|
+          send(attr, value)
+        end
+        variables(ci_prod_database_vars)
+      end
+      template "#{name}_create_prod_config" do
+        source 'ci-prod-config.php.erb'
+        path "#{source_dir}/application/config/production/config.php"
+        cookbook 'pacifica'
+        ci_prod_config_opts.each do |attr, value|
+          send(attr, value)
+        end
+        variables(ci_prod_config_vars)
+      end
       # ALL the files under #{source_dir} need to be owned by #{apache_user}
       execute "chown_#{name}_files" do
         command "chown -R #{node['apache']['user']}:#{node['apache']['group']} #{source_dir}"
       end
-
-      # Doing this because a PHP template is ugly
-      execute "create_#{name}_fqdn" do
-        command <<-HDOC
-echo "\\\\$config['base_url'] = '#{site_fqdn}';" >> #{source_dir}/application/config/production/config.php
-HDOC
-        not_if "grep -q #{site_fqdn} #{source_dir}/application/config/production/config.php"
-      end
-
-      template "#{name}_create_prod_config" do
-        source 'ci-prod-config.php.erb'
-        path "#{source_dir}/application/config/production/config.php"
-        ci_prod_template_opts.each do |attr, value|
-          send(attr, value)
-        end
-        cookbook 'pacifica'
-        variables(ci_prod_template_vars)
-      end
-
-      # Prep the git clone selinux context
       execute "set_#{name}_selinux_context" do
         command "chcon -R system_u:object_r:httpd_sys_content_t:s0 #{source_dir}"
         only_if { rhel? }
@@ -100,16 +99,25 @@ HDOC
         min_spare_servers: node['cpu']['total'],
         max_spare_servers: node['cpu']['total'],
       }
-
+      default_additional_attrs = {
+        'access.log' => "/var/log/php-fpm/#{name}-access.log",
+        'access.format' => '"%R - %u %t \"%m %{REQUEST_URI}e\" %s"',
+        'catch_workers_output' => 'yes',
+      }
       ipaddress, listen_port = if php_fpm_opts.key?(:listen)
                                  php_fpm_opts[:listen].split(':')
                                else
                                  %w(127.0.0.1 9000)
                                end
-
+      new_hash = if php_fpm_opts.key?(:additional_config)
+                   default_additional_attrs.merge(php_fpm_opts[:additional_config])
+                 else
+                   default_additional_attrs
+                 end
+      php_fpm_opts[:additional_config] = new_hash
       # Set SELinux Policy Port
       selinux_policy_port "#{name}_#{listen_port}" do
-        port listen_port
+      selinux_policy_port listen_port do
         protocol 'tcp'
         secontext 'http_port_t'
         only_if { rhel? && IPAddress.valid?(ipaddress) }
@@ -126,8 +134,7 @@ HDOC
         pool_name name
         listen "/var/run/php5-fpm-#{name}.sock"
         chdir source_dir
-        max_children
-        notifies :restart, "service[#{name}]"
+        notifies :restart, "service[#{node['php']['fpm_service']}]"
         default_attrs.merge(php_fpm_opts).each do |attr, value|
           send(attr, value)
         end
