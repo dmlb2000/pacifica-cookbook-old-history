@@ -91,16 +91,16 @@ describe 'test::pacifica_base_php' do
             expect(chef_run).to include_recipe('php::module_gd')
           end
 
-          it "#{resource_key}:  Adds the Site FQDN to the #{resource_value} PHP configuraiton" do
-            expect(chef_run).to run_execute("create_#{resource_value}_fqdn")
-          end
-
           it "#{resource_key}:  Change #{resource_value} git ownership to apache user and group" do
             expect(chef_run).to run_execute("chown_#{resource_value}_files")
           end
 
           it "#{resource_key}:  Creates #{resource_value} config from a template" do
             expect(chef_run).to create_template("/opt/#{resource_value}/source/application/config/production/config.php")
+          end
+
+          it "#{resource_key}:  Creates #{resource_value} production database from a template" do
+            expect(chef_run).to create_template("#{resource_value}_create_prod_database")
           end
 
           it "#{resource_key}:  Sets the #{resource_value} PHP FPM Pool" do

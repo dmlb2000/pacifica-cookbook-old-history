@@ -6,7 +6,7 @@ module PacificaCookbook
     module Base
       # Create prefixed directories
       def base_packages
-        package "#{name}_packages" do
+        package "#{new_resource.name}_packages" do
           if rhel?
             package_name 'sqlite-devel'
           elsif debian?
@@ -24,7 +24,7 @@ module PacificaCookbook
       end
 
       def base_git_client
-        git_client name do
+        git_client new_resource.name do
           git_client_opts.each do |attr, value|
             send(attr, value)
           end
@@ -41,7 +41,7 @@ module PacificaCookbook
       end
 
       def base_file
-        file "#{prefix_dir}/#{name}" do
+        file "#{prefix_dir}/#{new_resource.name}" do
           owner 'root'
           group 'root'
           mode '0700'
@@ -62,15 +62,15 @@ HDOC
       end
 
       def base_systemd_service
-        systemd_service name do
-          description "start #{name} in python"
+        systemd_service new_resource.name do
+          description "start #{new_resource.name} in python"
           after %w(network.target)
           install do
             wanted_by 'multi-user.target'
           end
           service do
             working_directory source_dir
-            exec_start "#{prefix_dir}/#{name}"
+            exec_start "#{prefix_dir}/#{new_resource.name}"
             service_opts.each do |attr, value|
               send(attr, value)
             end
@@ -80,13 +80,13 @@ HDOC
       end
 
       def base_service
-        service name do
+        service new_resource.name do
           action [:enable, :start]
         end
       end
 
       def base_python_runtime
-        python_runtime name do
+        python_runtime new_resource.name do
           python_opts.each do |attr, value|
             send(attr, value)
           end
@@ -102,7 +102,7 @@ HDOC
       end
 
       def base_python_execute_requirements
-        python_execute "#{name}_requirements" do
+        python_execute "#{new_resource.name}_requirements" do
           virtualenv virtualenv_dir
           command "-m pip install -r #{source_dir}/requirements.txt"
           pip_install_opts.each do |attr, value|
@@ -112,7 +112,7 @@ HDOC
       end
 
       def base_python_execute_uwsgi
-        python_execute "#{name}_uwsgi" do
+        python_execute "#{new_resource.name}_uwsgi" do
           virtualenv virtualenv_dir
           command '-m pip install uwsgi'
           not_if { ::File.exist?("#{virtualenv_dir}/bin/uwsgi") }
@@ -120,7 +120,7 @@ HDOC
       end
 
       def base_python_execute_build
-        python_execute "#{name}_build" do
+        python_execute "#{new_resource.name}_build" do
           virtualenv virtualenv_dir
           cwd source_dir
           command "setup.py install --prefix #{virtualenv_dir}"

@@ -124,9 +124,10 @@ if defined?(ChefSpec)
       :varnish_config, :configure, resource_name
     )
   end
-  # def run_python_execute(resource_name)
-  #   ChefSpec::Matchers::ResourceMatcher.new(
-  #     :python_execute, :run, resource_name
-  #   )
-  # end
+
+  def run_python_execute(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(
+      :python_execute, :run, resource_name
+    )
+  end
 end

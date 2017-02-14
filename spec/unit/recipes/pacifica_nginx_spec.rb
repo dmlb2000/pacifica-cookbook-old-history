@@ -40,7 +40,7 @@ describe 'test::pacifica_nginx' do
             end
           end
 
-          it "#{resource_key}:  Creates the NGINX directory" do
+          it "#{resource_key}:  Creates the nginx directory in /etc" do
             expect(chef_run).to create_directory('/etc/nginx')
           end
 
