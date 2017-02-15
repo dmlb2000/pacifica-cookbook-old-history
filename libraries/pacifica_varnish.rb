@@ -68,7 +68,8 @@ module PacificaCookbook
         source 'backends.vcl.erb'
         variables(
           endpoint_name: new_resource.name,
-          backend_hosts: vlc_hosts
+          backend_hosts: vlc_hosts,
+          probe_url: '/robots.txt'
         )
         notifies :restart, 'service[varnish]'
         template_opts.each do |key, attr|
