@@ -3,6 +3,8 @@ module PacificaCookbook
   require_relative 'pacifica_base_php'
   # installs and configures pacifica cart frontend wsgi
   class PacificaReporting < PacificaBasePhp
+    resource_name :pacifica_reporting
+
     property :name, String, name_property: true
     property :git_opts, Hash, default: {
       repository: 'https://github.com/EMSL-MSC/pacifica-reporting.git',
@@ -20,6 +22,5 @@ module PacificaCookbook
       cache_on: 'TRUE',
       cache_dir: '/tmp',
     }
-    resource_name :pacifica_reporting
   end
 end

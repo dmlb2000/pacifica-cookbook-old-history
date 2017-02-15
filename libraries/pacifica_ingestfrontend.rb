@@ -3,6 +3,8 @@ module PacificaCookbook
   require_relative 'pacifica_base'
   # installs and configures pacifica ingest frontend wsgi
   class PacificaIngestFrontend < PacificaBase
+    resource_name :pacifica_ingestfrontend
+
     property :name, String, name_property: true
     property :git_opts, Hash, default: {
       repository: 'https://github.com/EMSL-MSC/pacifica-ingest.git',
@@ -25,7 +27,6 @@ module PacificaCookbook
       }
     }
     property :wsgi_file, String, default: 'IngestServer.py'
-    property :port, String, default: 8066
-    resource_name :pacifica_ingestfrontend
+    property :port, Integer, default: 8066
   end
 end

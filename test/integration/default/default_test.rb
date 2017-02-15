@@ -1,4 +1,4 @@
-# # encoding: utf-8
+# encoding: utf-8
 
 # Inspec test for recipe pacifica::default
 
@@ -17,4 +17,8 @@
   describe port(port.to_i) do
     it { should be_listening }
   end
+end
+
+describe package 'git' do
+  it { should be_installed }
 end

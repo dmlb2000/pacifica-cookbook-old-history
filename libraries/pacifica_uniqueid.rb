@@ -3,6 +3,8 @@ module PacificaCookbook
   require_relative 'pacifica_base'
   # install and configure pacifica uniqueid service
   class PacificaUniqueid < PacificaBase
+    resource_name :pacifica_uniqueid
+
     property :name, String, name_property: true
     property :git_opts, Hash, default: {
       repository: 'https://github.com/EMSL-MSC/pacifica-uniqueid.git',
@@ -19,6 +21,5 @@ module PacificaCookbook
     }
     property :wsgi_file, String, default: 'UniqueIDServer.py'
     property :port, Integer, default: 8051
-    resource_name :pacifica_uniqueid
   end
 end

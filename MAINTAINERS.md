@@ -10,3 +10,4 @@ Check out [How Cookbooks are Maintained](https://github.com/chef-cookbooks/commu
 * [David Brown](https://github.com/dmlb2000)
 
 # Maintainers
+* [Ian Smith](https://github.com/gitbytes)

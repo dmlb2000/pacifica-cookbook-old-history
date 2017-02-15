@@ -3,6 +3,8 @@ module PacificaCookbook
   require_relative 'pacifica_base'
   # install and configure pacifica metadata service
   class PacificaMetadata < PacificaBase
+    resource_name :pacifica_metadata
+
     property :name, String, name_property: true
     property :git_opts, Hash, default: {
       repository: 'https://github.com/EMSL-MSC/pacifica-metadata.git',
@@ -18,6 +20,5 @@ module PacificaCookbook
     }
     property :wsgi_file, String, default: 'MetadataServer.py'
     property :port, Integer, default: 8121
-    resource_name :pacifica_metadata
   end
 end
