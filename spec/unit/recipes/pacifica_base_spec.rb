@@ -22,7 +22,7 @@ describe 'test::pacifica_base' do
   before do
     allow_any_instance_of(Chef::Recipe).to receive(:include_recipe).and_call_original
     allow(File).to receive(:exist?).and_call_original
-    base_resource.each do |resource_key, resource_value|
+    base_resource.each_value do |resource_value|
       allow(File).to receive(:exist?).with(
         "/opt/#{resource_value}/source/setup.py"
       ).and_return(true)
