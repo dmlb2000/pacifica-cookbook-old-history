@@ -85,7 +85,7 @@ describe 'test::pacifica_base' do
 
           it "#{resource_key}:  Installs #{resource_value} uwsgi with pip" do
             expect(chef_run).to run_python_execute(
-              "#{resource_value}_requirements"
+              "#{resource_value}_uwsgi"
             )
           end
 
