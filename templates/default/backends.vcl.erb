@@ -6,7 +6,7 @@ backend <%= name %> {
   .host = "<%= host.split(':')[0] %>";
   .port = "<%= host.split(':')[1] %>";
   .probe = {
-    .url = "/";
+    .url = "<%= @probe_url %>";
   }
 }
 <% end %>
