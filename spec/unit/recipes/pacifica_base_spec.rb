@@ -21,9 +21,14 @@ describe 'test::pacifica_base' do
   }
   before do
     allow_any_instance_of(Chef::Recipe).to receive(:include_recipe).and_call_original
+    allow(File).to receive(:exist?).and_call_original
+    base_resource.each do |resource_key, resource_value|
+      allow(File).to receive(:exist?).with(
+        "/opt/#{resource_value}/source/setup.py"
+      ).and_return(true)
+      stub_command("setup.py install --prefix /opt/#{resource_value}/virtualenv").and_return(true)
+    end
     stub_command(%r{/ls \/.*\/config.php/}).and_return(false)
-    stub_command('grep -q http://127.0.0.1 /opt/status/source/application/config/production/config.php').and_return(true)
-    stub_command('grep -q http://127.0.0.1 /opt/reporting/source/application/config/production/config.php').and_return(true)
     stub_command('/usr/sbin/apache2 -t').and_return(true)
     stub_command('/usr/sbin/httpd -t').and_return(true)
   end
@@ -84,14 +89,9 @@ describe 'test::pacifica_base' do
             )
           end
 
-          # it "#{resource_key}:  Builds #{resource_value} python virtual environment" do
-          #   allow(File).to receive(:exist?).and_call_original
-          #   allow(File).to receive(:exist?).with(
-          #     "/opt/#{resource_value}/source/setup.py"
-          #   ).and_return(true)
-          #   stub_command("setup.py install --prefix /opt/#{resource_value}/virtualenv").and_return(true)
-          #   expect(chef_run).to run_python_execute("#{resource_value}_build")
-          # end
+          it "#{resource_key}:  Builds #{resource_value} python virtual environment" do
+            expect(chef_run).to run_python_execute("#{resource_value}_build")
+          end
 
           it "#{resource_key}:  Creates #{resource_value} systemd service" do
             expect(chef_run).to create_systemd_service(resource_value)
