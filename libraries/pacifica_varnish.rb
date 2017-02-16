@@ -9,6 +9,7 @@ module PacificaCookbook
 
     property :name, String, name_property: true
     property :backend_hosts, Array, default: []
+    property :probe_url, String, default: '/robots.txt'
     property :listen_port, Integer, default: 6081
     property :repo_opts, Hash, default: {}
     property :config_opts, Hash, default: {}
@@ -69,7 +70,7 @@ module PacificaCookbook
         variables(
           endpoint_name: new_resource.name,
           backend_hosts: vlc_hosts,
-          probe_url: '/robots.txt'
+          probe_url: new_resource.probe_url
         )
         notifies :restart, 'service[varnish]'
         template_opts.each do |key, attr|
