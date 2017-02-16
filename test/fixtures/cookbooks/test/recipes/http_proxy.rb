@@ -11,4 +11,8 @@ template "#{node['apache']['dir']}/sites-available/pacifica.conf" do
     notifies :reload, 'service[apache2]'
   end
 end
+htpasswd "/etc/httpd/htpasswd" do
+  user 'dmlb2001'
+  password '1234'
+end
 apache_site 'pacifica'

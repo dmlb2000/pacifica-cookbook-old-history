@@ -13,7 +13,11 @@
     <Location "/">
       Options FollowSymLinks
       AllowOverride None
-      Require all granted
+      AuthType Basic
+      AuthName "Pacifica Uploader"
+      AuthBasicProvider file
+      AuthUserFile "/etc/httpd/htpasswd"
+      Require user dmlb2001
     </Location>
     <Directory "/opt/reporting/source">
       Options FollowSymLinks
@@ -36,9 +40,32 @@
     <Location "/">
       Options FollowSymLinks
       AllowOverride None
-      Require all granted
+      AuthType Basic
+      AuthName "Pacifica Uploader"
+      AuthBasicProvider file
+      AuthUserFile "/etc/httpd/htpasswd"
+      Require user dmlb2001
     </Location>
     <Directory "/opt/status/source">
+      Options FollowSymLinks
+      AllowOverride None
+      Require all granted
+    </Directory>
+</VirtualHost>
+<VirtualHost *:80>
+    DocumentRoot "/opt/uploaderwsgi/source"
+    ServerName uploader.example.com
+    ProxyPass / http://localhost:8000
+    <Location "/">
+      Options FollowSymLinks
+      AllowOverride None
+      AuthType Basic
+      AuthName "Pacifica Uploader"
+      AuthBasicProvider file
+      AuthUserFile "/etc/httpd/htpasswd"
+      Require user dmlb2001
+    </Location>
+    <Directory "/opt/uploaderwsgi/source">
       Options FollowSymLinks
       AllowOverride None
       Require all granted
